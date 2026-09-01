@@ -1,0 +1,190 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 3. Primitive Definitions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // User Profiles Match Block
+    match /users/{userId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn();
+      allow create: if isOwner(userId) && isValidUserProfile(incoming());
+      allow update: if isOwner(userId) && isValidUserProfile(incoming());
+
+      function isValidUserProfile(data) {
+        return data.keys().hasAll(['name', 'level', 'exp', 'statPoints', 'rank', 'skills'])
+          && data.name is string && data.name.size() <= 100
+          && data.level is number
+          && data.exp is number
+          && data.statPoints is number
+          && data.rank is string
+          && data.skills is map
+          && (!('avatar' in data) || data.avatar is string);
+      }
+
+      // Settings (e.g., setups)
+      match /settings/{settingId} {
+        allow get: if isValidId(settingId) && isSignedIn();
+        allow create, update: if isValidId(settingId) && isOwner(userId) && incoming().keys().hasAll(['list']);
+        allow delete: if isValidId(settingId) && isOwner(userId);
+      }
+
+      // Quests
+      match /quests/{questId} {
+        allow list: if isSignedIn();
+        allow get: if isValidId(questId) && isSignedIn();
+        allow create: if isValidId(questId) && isOwner(userId) && isValidQuest(incoming());
+        allow update: if isValidId(questId) && isOwner(userId) && isValidQuest(incoming()) && (
+           incoming().diff(existing()).affectedKeys().hasOnly([
+             'title', 'description', 'rewardExp', 'isCompleted', 'type', 'id', 
+             'rewardStat', 'rewardStats', 'rewardStatValue', 'isRecurring', 
+             'lastCompletedAt', 'completedStatBoosts', 'completedLevelUp', 'updatedAt'
+           ])
+        );
+        allow delete: if isValidId(questId) && isOwner(userId);
+
+        function isValidQuest(data) {
+          return (!('title' in data) || (data.title is string && data.title.size() <= 200))
+            && (!('description' in data) || (data.description is string && data.description.size() <= 1000))
+            && (!('rewardExp' in data) || data.rewardExp is number)
+            && (!('isCompleted' in data) || data.isCompleted is bool)
+            && (!('type' in data) || (data.type in ['main', 'sub', 'daily']))
+            && (!('id' in data) || data.id is string)
+            && (!('rewardStat' in data) || data.rewardStat is string || data.rewardStat == null)
+            && (!('rewardStats' in data) || data.rewardStats is list || data.rewardStats == null)
+            && (!('rewardStatValue' in data) || data.rewardStatValue is number || data.rewardStatValue == null)
+            && (!('isRecurring' in data) || data.isRecurring is bool || data.isRecurring == null)
+            && (!('lastCompletedAt' in data) || data.lastCompletedAt is string || data.lastCompletedAt == null)
+            && (!('completedStatBoosts' in data) || data.completedStatBoosts is map || data.completedStatBoosts == null)
+            && (!('completedLevelUp' in data) || data.completedLevelUp is bool || data.completedLevelUp == null)
+            && (!('updatedAt' in data) || data.updatedAt is string || data.updatedAt == null || data.updatedAt is timestamp);
+        }
+      }
+
+    // Trades
+      match /trades/{tradeId} {
+        allow list: if isSignedIn();
+        allow get: if isValidId(tradeId) && isSignedIn();
+        allow create: if isValidId(tradeId) && isOwner(userId) && isValidTrade(incoming());
+        allow update: if isValidId(tradeId) && isOwner(userId) && isValidTrade(incoming()) && (
+          incoming().diff(existing()).affectedKeys().hasOnly(['symbol', 'type', 'entryPrice', 'exitPrice', 'quantity', 'status', 'result', 'pnl', 'rr', 'setup', 'session', 'zone', 'notes', 'entryDate', 'exitDate', 'portfolioId', 'id', 'images', 'stopLoss', 'takeProfit'])
+        );
+        allow delete: if isValidId(tradeId) && isOwner(userId);
+
+        function isValidTrade(data) {
+          return data.keys().hasAll(['symbol', 'type', 'entryPrice', 'quantity', 'status', 'result', 'entryDate', 'portfolioId'])
+            && data.symbol is string && data.symbol.size() <= 64
+            && data.type in ['long', 'short']
+            && data.entryPrice is number
+            && data.quantity is number
+            && data.status in ['open', 'closed']
+            && data.result in ['win', 'loss', 'breakeven', 'pending']
+            && data.entryDate is string
+            && data.portfolioId is string
+            && (!('exitPrice' in data) || data.exitPrice is number || data.exitPrice == null)
+            && (!('pnl' in data) || data.pnl is number || data.pnl == null)
+            && (!('rr' in data) || data.rr is number || data.rr == null)
+            && (!('setup' in data) || data.setup is string || data.setup == null)
+            && (!('session' in data) || data.session is string || data.session == null)
+            && (!('zone' in data) || data.zone is string || data.zone == null)
+            && (!('images' in data) || data.images is list || data.images == null)
+            && (!('notes' in data) || data.notes is string || data.notes == null)
+            && (!('exitDate' in data) || data.exitDate is string || data.exitDate == null)
+            && (!('id' in data) || data.id is string || data.id == null)
+            && (!('stopLoss' in data) || data.stopLoss is number || data.stopLoss == null)
+            && (!('takeProfit' in data) || data.takeProfit is number || data.takeProfit == null);
+        }
+      }
+
+      // Portfolios
+      match /portfolios/{portfolioId} {
+        allow list: if isSignedIn();
+        allow get: if isValidId(portfolioId) && isSignedIn();
+        allow create: if isValidId(portfolioId) && isOwner(userId) && isValidPortfolio(incoming());
+        allow update: if isValidId(portfolioId) && isOwner(userId) && isValidPortfolio(incoming()) && (
+          incoming().diff(existing()).affectedKeys().hasOnly(['name', 'balance', 'initialBalance', 'currency', 'id', 'transactions'])
+        );
+        allow delete: if isValidId(portfolioId) && isOwner(userId);
+
+        function isValidPortfolio(data) {
+          return data.keys().hasAll(['name', 'balance', 'initialBalance', 'currency'])
+            && data.name is string && data.name.size() <= 100
+            && data.balance is number
+            && data.initialBalance is number
+            && data.currency is string
+            && (!('transactions' in data) || data.transactions is list || data.transactions == null)
+            && (!('id' in data) || data.id is string || data.id == null);
+        }
+
+        // Transactions
+        match /transactions/{transactionId} {
+          allow list: if isSignedIn();
+          allow get: if isValidId(transactionId) && isSignedIn();
+          allow create: if isValidId(transactionId) && isOwner(userId) && isValidTransaction(incoming());
+          allow update: if isValidId(transactionId) && isOwner(userId) && isValidTransaction(incoming()) && (
+            incoming().diff(existing()).affectedKeys().hasOnly(['type', 'amount', 'date', 'portfolioId', 'id'])
+          );
+          allow delete: if isValidId(transactionId) && isOwner(userId);
+
+          function isValidTransaction(data) {
+            return data.keys().hasAll(['type', 'amount', 'date', 'portfolioId'])
+              && data.type in ['deposit', 'withdraw', 'adjustment']
+              && data.amount is number
+              && data.date is string
+              && data.portfolioId is string;
+          }
+        }
+      }
+
+      // Backtests
+      match /backtests/{backtestId} {
+        allow list: if isOwner(userId);
+        allow get: if isValidId(backtestId) && isOwner(userId);
+        allow create: if isValidId(backtestId) && isOwner(userId) && isValidBacktest(incoming());
+        allow update: if isValidId(backtestId) && isOwner(userId) && isValidBacktest(incoming()) && (
+          incoming().diff(existing()).affectedKeys().hasOnly(['symbol', 'setup', 'dateTime', 'session', 'zone', 'rr', 'actualRr', 'result', 'notes', 'id', 'createdAt', 'position'])
+        );
+        allow delete: if isValidId(backtestId) && isOwner(userId);
+
+        function isValidBacktest(data) {
+          return data.keys().hasAll(['symbol', 'setup', 'dateTime', 'session', 'zone', 'rr', 'result', 'createdAt'])
+            && data.symbol is string
+            && data.setup is string
+            && data.dateTime is string
+            && data.session is string
+            && data.zone is string
+            && data.rr is number
+            && (!('actualRr' in data) || data.actualRr is number)
+            && data.result in ['win', 'loss', 'breakeven']
+            && (!('position' in data) || data.position in ['buy', 'sell'])
+            && (!('notes' in data) || data.notes is string || data.notes == null)
+            && (!('id' in data) || data.id is string || data.id == null)
+            && data.createdAt is string;
+        }
+      }
+    }
+  }
+}

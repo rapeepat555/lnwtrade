@@ -1,0 +1,6 @@
+{
+  "name": "node-domexception",
+  "version": "1.0.0",
+  "description": "Native DOMException wrapper to avoid deprecation warning",
+  "main": "index.js"
+}
