@@ -55,7 +55,7 @@ export function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0B0E] flex items-center justify-center p-4 selection:bg-[#10B981]/20 selection:text-white relative overflow-hidden">
+    <div className="min-h-screen bg-[#0A0B0E] flex items-center justify-center p-3 sm:p-4 selection:bg-[#10B981]/20 selection:text-white relative overflow-hidden">
       {/* Background Decor */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#10B981]/5 blur-[120px] rounded-full animate-pulse" />
@@ -63,39 +63,39 @@ export function Auth() {
       </div>
 
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md relative z-10"
+        className="w-full max-w-sm relative z-10 my-auto"
       >
-        <div className="bg-[#14161A] p-8 sm:p-10 rounded-[32px] border-2 border-[#1F2228] shadow-2xl shadow-black/50">
-          <div className="flex flex-col items-center mb-8">
-            <div className="w-16 h-16 bg-[#1F2228] rounded-2xl flex items-center justify-center mb-6 relative group">
-              <div className="absolute inset-0 bg-[#10B981]/20 rounded-2xl blur-xl group-hover:bg-[#10B981]/30 transition-all" />
-              <Zap className="w-8 h-8 text-[#10B981] relative z-10" />
+        <div className="bg-[#14161A] p-5 sm:p-7 rounded-[24px] border border-[#1F2228] shadow-2xl shadow-black/50">
+          <div className="flex flex-col items-center mb-5">
+            <div className="w-12 h-12 bg-[#1F2228] rounded-xl flex items-center justify-center mb-3 relative group">
+              <div className="absolute inset-0 bg-[#10B981]/20 rounded-xl blur-md group-hover:bg-[#10B981]/30 transition-all" />
+              <Zap className="w-6 h-6 text-[#10B981] relative z-10" />
             </div>
-            <h1 className="text-3xl font-black text-white italic tracking-tighter uppercase mb-2">
+            <h1 className="text-xl sm:text-2xl font-black text-white italic tracking-tight uppercase mb-1">
               Trader Hero
             </h1>
-            <p className="text-[#636A78] text-xs font-black uppercase tracking-[.25em]">
+            <p className="text-[#636A78] text-[10px] font-bold uppercase tracking-[0.2em]">
               {mode === 'login' ? 'Continue Your Ascension' : mode === 'signup' ? 'Initiate Your Career' : 'Relink Your Consciousness'}
             </p>
           </div>
 
-          <form onSubmit={handleAuth} className="space-y-4">
+          <form onSubmit={handleAuth} className="space-y-3.5">
             <AnimatePresence mode="wait">
               {mode === 'signup' && (
                 <motion.div 
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="space-y-2 overflow-hidden"
+                  className="space-y-1.5 overflow-hidden"
                 >
-                  <label className="text-[10px] font-black text-[#636A78] uppercase tracking-widest px-1">Trader Name</label>
+                  <label className="text-[10px] font-bold text-[#636A78] uppercase tracking-wider px-1">Trader Name</label>
                   <div className="relative group">
-                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#636A78] group-focus-within:text-[#10B981] transition-colors" />
+                    <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#636A78] group-focus-within:text-[#10B981] transition-colors" />
                     <input 
                       type="text"
-                      className="w-full bg-[#0A0B0E] border-2 border-[#1F2228] rounded-2xl p-4 pl-12 text-white text-sm focus:outline-none focus:border-[#10B981] transition-all placeholder:text-[#636A78]/50"
+                      className="w-full bg-[#0A0B0E] border border-[#1F2228] rounded-xl py-2.5 sm:py-3 pl-10 pr-3 text-white text-sm focus:outline-none focus:border-[#10B981] transition-all placeholder:text-[#636A78]/50"
                       placeholder="Enter callsign..."
                       value={name}
                       onChange={(e) => setName(e.target.value)}
@@ -106,13 +106,13 @@ export function Auth() {
               )}
             </AnimatePresence>
 
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-[#636A78] uppercase tracking-widest px-1">Email Address</label>
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold text-[#636A78] uppercase tracking-wider px-1">Email Address</label>
               <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#636A78] group-focus-within:text-[#10B981] transition-colors" />
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#636A78] group-focus-within:text-[#10B981] transition-colors" />
                 <input 
                   type="email"
-                  className="w-full bg-[#0A0B0E] border-2 border-[#1F2228] rounded-2xl p-4 pl-12 text-white text-sm focus:outline-none focus:border-[#10B981] transition-all placeholder:text-[#636A78]/50"
+                  className="w-full bg-[#0A0B0E] border border-[#1F2228] rounded-xl py-2.5 sm:py-3 pl-10 pr-3 text-white text-sm focus:outline-none focus:border-[#10B981] transition-all placeholder:text-[#636A78]/50"
                   placeholder="name@terminal.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -122,24 +122,24 @@ export function Auth() {
             </div>
 
             {mode !== 'forgot-password' && (
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <div className="flex justify-between px-1">
-                  <label className="text-[10px] font-black text-[#636A78] uppercase tracking-widest">Access Key</label>
+                  <label className="text-[10px] font-bold text-[#636A78] uppercase tracking-wider">Access Key</label>
                   {mode === 'login' && (
                     <button 
                       type="button" 
                       onClick={() => setMode('forgot-password')}
-                      className="text-[10px] font-black text-[#10B981] hover:text-[#3B82F6] uppercase tracking-widest transition-colors"
+                      className="text-[10px] font-bold text-[#10B981] hover:text-[#3B82F6] uppercase tracking-wider transition-colors"
                     >
                       Lost Access?
                     </button>
                   )}
                 </div>
                 <div className="relative group">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#636A78] group-focus-within:text-[#10B981] transition-colors" />
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#636A78] group-focus-within:text-[#10B981] transition-colors" />
                   <input 
                     type="password"
-                    className="w-full bg-[#0A0B0E] border-2 border-[#1F2228] rounded-2xl p-4 pl-12 text-white text-sm focus:outline-none focus:border-[#10B981] transition-all placeholder:text-[#636A78]/50"
+                    className="w-full bg-[#0A0B0E] border border-[#1F2228] rounded-xl py-2.5 sm:py-3 pl-10 pr-3 text-white text-sm focus:outline-none focus:border-[#10B981] transition-all placeholder:text-[#636A78]/50"
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -154,7 +154,7 @@ export function Auth() {
                 <motion.p 
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className="text-rose-500 text-[10px] font-black uppercase tracking-widest px-1"
+                  className="text-rose-500 text-[10px] font-bold uppercase tracking-wider px-1"
                 >
                   ERR: {error}
                 </motion.p>
@@ -163,7 +163,7 @@ export function Auth() {
                 <motion.p 
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className="text-[#10B981] text-[10px] font-black uppercase tracking-widest px-1"
+                  className="text-[#10B981] text-[10px] font-bold uppercase tracking-wider px-1"
                 >
                   SYS: {success}
                 </motion.p>
@@ -172,7 +172,7 @@ export function Auth() {
 
             <button 
               disabled={loading}
-              className="w-full py-4 bg-[#10B981] text-[#0A0B0E] rounded-2xl text-xs font-black uppercase tracking-widest hover:scale-[1.02] transition-all shadow-lg shadow-[#10B981]/20 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:hover:scale-100"
+              className="w-full py-3 sm:py-3.5 bg-[#10B981] text-[#0A0B0E] rounded-xl text-xs font-black uppercase tracking-wider hover:opacity-90 transition-all shadow-md shadow-[#10B981]/20 flex items-center justify-center gap-2 group disabled:opacity-50 cursor-pointer"
             >
               {loading ? (
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -185,33 +185,33 @@ export function Auth() {
             </button>
           </form>
 
-          <div className="mt-8 pt-8 border-t-2 border-[#1F2228]">
+          <div className="mt-4 pt-4 border-t border-[#1F2228]">
             <button 
               onClick={handleGoogleSignIn}
-              className="w-full py-4 bg-[#1F2228] text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-[#252830] transition-all flex items-center justify-center gap-3 group px-4"
+              className="w-full py-2.5 sm:py-3 bg-[#1F2228] hover:bg-[#252830] text-white rounded-xl text-xs font-bold tracking-wider transition-all flex items-center justify-center gap-2.5 group px-4 cursor-pointer"
             >
               <Google className="w-4 h-4 text-[#10B981]" />
               Authenticate with Google
             </button>
           </div>
 
-          <div className="mt-6 text-center">
+          <div className="mt-4 text-center">
             {mode === 'login' ? (
-              <p className="text-xs text-[#636A78] font-bold">
+              <p className="text-xs text-[#636A78] font-medium">
                 New trader?{' '}
                 <button 
                   onClick={() => setMode('signup')}
-                  className="text-[#10B981] hover:text-[#3B82F6] transition-colors uppercase tracking-widest font-black"
+                  className="text-[#10B981] hover:underline uppercase tracking-wider font-bold cursor-pointer"
                 >
                   Join the Terminal
                 </button>
               </p>
             ) : (
-              <p className="text-xs text-[#636A78] font-bold">
+              <p className="text-xs text-[#636A78] font-medium">
                 Known identity?{' '}
                 <button 
                   onClick={() => setMode('login')}
-                  className="text-[#10B981] hover:text-[#3B82F6] transition-colors uppercase tracking-widest font-black"
+                  className="text-[#10B981] hover:underline uppercase tracking-wider font-bold cursor-pointer"
                 >
                   Return to Access
                 </button>
@@ -220,10 +220,10 @@ export function Auth() {
           </div>
         </div>
 
-        <div className="mt-8 flex justify-center gap-8 opacity-20 filter grayscale">
-          <Target className="w-5 h-5 text-[#636A78]" />
-          <Shield className="w-5 h-5 text-[#636A78]" />
-          <Brain className="w-5 h-5 text-[#636A78]" />
+        <div className="mt-4 flex justify-center gap-6 opacity-20 filter grayscale">
+          <Target className="w-4 h-4 text-[#636A78]" />
+          <Shield className="w-4 h-4 text-[#636A78]" />
+          <Brain className="w-4 h-4 text-[#636A78]" />
         </div>
       </motion.div>
     </div>
