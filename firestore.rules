@@ -130,7 +130,7 @@ service cloud.firestore {
         allow get: if isValidId(portfolioId) && isSignedIn();
         allow create: if isValidId(portfolioId) && isOwner(userId) && isValidPortfolio(incoming());
         allow update: if isValidId(portfolioId) && isOwner(userId) && isValidPortfolio(incoming()) && (
-          incoming().diff(existing()).affectedKeys().hasOnly(['name', 'balance', 'initialBalance', 'currency', 'id', 'transactions'])
+          incoming().diff(existing()).affectedKeys().hasOnly(['name', 'balance', 'initialBalance', 'currency', 'id', 'transactions', 'isArchived', 'archivedAt'])
         );
         allow delete: if isValidId(portfolioId) && isOwner(userId);
 
@@ -141,6 +141,8 @@ service cloud.firestore {
             && data.initialBalance is number
             && data.currency is string
             && (!('transactions' in data) || data.transactions is list || data.transactions == null)
+            && (!('isArchived' in data) || data.isArchived is bool || data.isArchived == null)
+            && (!('archivedAt' in data) || data.archivedAt is string || data.archivedAt == null)
             && (!('id' in data) || data.id is string || data.id == null);
         }
 

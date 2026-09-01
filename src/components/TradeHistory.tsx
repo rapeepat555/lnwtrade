@@ -84,7 +84,7 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
               <option key="portfolio-all" value="all" className="bg-[#14161A]">ทั้งหมด (Wallet)</option>
               {portfolios.map(p => (
                 <option key={`portfolio-${p.id}`} value={p.id} className="bg-[#14161A] text-white">
-                  {p.name}
+                  {p.name}{p.isArchived ? ' (จัดเก็บแล้ว)' : ''}
                 </option>
               ))}
             </select>

@@ -2,5 +2,5 @@
   "name": "TradeTrack Pro",
   "description": "A professional trading journal and analytics dashboard to help traders optimize their performance with data-driven insights and AI analysis.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["Dashboard", "Analytics", "Wallet Management"]
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

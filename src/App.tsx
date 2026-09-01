@@ -15,7 +15,7 @@ import { TradeForm } from './components/TradeForm';
 import { UserProfile } from './components/UserProfile';
 import { TradingViewChart } from './components/TradingViewChart';
 import { useTradingData } from './hooks';
-import { Plus, User as UserIcon, Camera, Users, LogOut, ArrowLeft, X, Brain, TrendingUp, MessageCircleCode, Star } from 'lucide-react';
+import { Plus, User as UserIcon, Camera, Users, LogOut, ArrowLeft, X, Brain, TrendingUp, MessageCircleCode, Star, Sun, Moon } from 'lucide-react';
 import { AIChat } from './components/AIChat';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UserProfile as UserProfileType, Quest } from './types';
@@ -100,6 +100,27 @@ export default function App() {
   const [tradingInterval, setTradingInterval] = useState('D');
   const [aiAnalysisRequest, setAiAnalysisRequest] = useState<{symbol: string, interval: string} | null>(null);
 
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    const saved = localStorage.getItem('trader_journal_theme');
+    if (saved === 'light' || saved === 'dark') return saved;
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  });
+
+  React.useEffect(() => {
+    if (theme === 'light') {
+      document.documentElement.classList.add('light');
+      document.body.classList.add('light');
+    } else {
+      document.documentElement.classList.remove('light');
+      document.body.classList.remove('light');
+    }
+    localStorage.setItem('trader_journal_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
+
   const handleAnalyzeChart = (symbol: string, interval: string) => {
     setAiAnalysisRequest({ symbol, interval });
     setIsAnalysisOpen(true);
@@ -174,6 +195,7 @@ export default function App() {
     setActivePortfolio,
     addPortfolio,
     updatePortfolio,
+    archivePortfolio,
     deletePortfolio,
     stats, 
     addTrade, 
@@ -659,6 +681,7 @@ export default function App() {
             setActivePortfolio={setActivePortfolio}
             addPortfolio={addPortfolio}
             updatePortfolio={updatePortfolio}
+            archivePortfolio={archivePortfolio}
             deletePortfolio={deletePortfolio}
             updateBalance={updateBalance} 
             addTransaction={addTransaction}
@@ -719,13 +742,11 @@ export default function App() {
           "flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4",
           activeTab === 'tradingview' ? "px-4 sm:px-0" : "mb-8 md:mb-12"
         )}>
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-
-
+          <div className="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
             <div className="relative">
               <button 
                 onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}
-                className="flex items-center gap-3 px-3 py-1.5 bg-[#14161A] rounded-full border border-[#1F2228] w-fit hover:border-[#10B981] transition-all cursor-pointer group"
+                className="flex items-center gap-3 px-3 py-1.5 bg-[#14161A] rounded-full border border-[#1F2228] w-fit hover:border-[#10B981] transition-all cursor-pointer group shadow-sm"
               >
                 <div className="w-6 h-6 rounded-full bg-[#10B981]/20 flex items-center justify-center border border-[#10B981]/30 group-hover:bg-[#10B981]/30 group-hover:border-[#10B981]/50 transition-all overflow-hidden shrink-0">
                   {(userProfile.avatar || user.photoURL) ? (
@@ -734,7 +755,7 @@ export default function App() {
                     <UserIcon className="w-3.5 h-3.5 text-[#10B981]" />
                   )}
                 </div>
-                <span className="text-[10px] font-black text-white uppercase tracking-wider truncate max-w-[150px]">
+                <span className="text-[10px] font-black text-white uppercase tracking-wider truncate max-w-[140px]">
                   {userProfile.name || user.displayName || user.email?.split('@')[0]}
                 </span>
                 { (userProfile.name || user.displayName || user.email?.split('@')[0] || '').toLowerCase().includes('rapeepat') && (
@@ -816,15 +837,39 @@ export default function App() {
                 )}
               </AnimatePresence>
             </div>
+
+            {/* Light / Dark Mode Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              aria-label="Toggle Light or Dark Mode"
+              title={theme === 'dark' ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              className="flex items-center gap-2 px-3 py-1.5 bg-[#14161A] rounded-full border border-[#1F2228] hover:border-[#10B981] text-[#E0E0E0] hover:text-[#10B981] transition-all cursor-pointer shadow-sm active:scale-95 group"
+            >
+              {theme === 'dark' ? (
+                <>
+                  <div className="w-5 h-5 rounded-full bg-amber-400/15 flex items-center justify-center border border-amber-400/30">
+                    <Sun className="w-3 h-3 text-amber-400 group-hover:rotate-45 transition-transform" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-wider text-[#E0E0E0] group-hover:text-white">Light Mode</span>
+                </>
+              ) : (
+                <>
+                  <div className="w-5 h-5 rounded-full bg-indigo-500/15 flex items-center justify-center border border-indigo-500/30">
+                    <Moon className="w-3 h-3 text-indigo-500 group-hover:-rotate-12 transition-transform" />
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-wider text-slate-700 group-hover:text-slate-900">Dark Mode</span>
+                </>
+              )}
+            </button>
           </div>
           
           {!viewUserId && (
             <button 
               onClick={() => setIsFormOpen(true)}
-              className="flex items-center justify-center gap-2 bg-[#10B981] text-[#0A0B0E] px-6 py-2.5 rounded-lg shadow-lg shadow-[#10B981]/10 hover:opacity-90 transition-all font-bold text-xs tracking-tight w-full sm:w-auto"
+              className="flex items-center justify-center gap-1.5 bg-[#10B981] text-[#0A0B0E] px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl shadow-md shadow-[#10B981]/15 hover:opacity-90 active:scale-[0.98] transition-all font-bold text-xs tracking-tight w-full sm:w-auto"
             >
-              <Plus className="w-4 h-4" />
-              + LOG NEW TRADE
+              <Plus className="w-3.5 h-3.5" />
+              <span>LOG NEW TRADE</span>
             </button>
           )}
           {viewUserId && (

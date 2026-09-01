@@ -251,7 +251,7 @@ export function Dashboard({ trades, portfolios, setups, readOnly }: DashboardPro
               <option key="portfolio-all" value="all" className="bg-[#14161A]">All Wallets</option>
               {portfolios.map((p, i) => (
                 <option key={`portfolio-${p.id || 'p'}-${i}`} value={p.id} className="bg-[#14161A] text-white">
-                  {p.name}
+                  {p.name}{p.isArchived ? ' (จัดเก็บแล้ว)' : ''}
                 </option>
               ))}
             </select>

@@ -26,10 +26,94 @@
 
 @layer base {
   html, body {
-    @apply bg-[#0A0B0E] text-[#E0E0E0] antialiased;
+    @apply bg-[#0A0B0E] text-[#E0E0E0] antialiased transition-colors duration-200;
     overscroll-behavior-y: none;
     touch-action: pan-y;
   }
+
+  html.light, body.light {
+    @apply bg-[#F4F6F9] text-[#1E293B];
+  }
+}
+
+/* Light Theme Component Overrides */
+html.light .bg-\[\#0A0B0E\],
+html.light .bg-\[\#0a0b0e\] {
+  background-color: #F4F6F9 !important;
+}
+
+html.light .bg-\[\#14161A\],
+html.light .bg-\[\#14161a\] {
+  background-color: #FFFFFF !important;
+}
+
+html.light .bg-\[\#1F2228\],
+html.light .bg-\[\#1f2228\] {
+  background-color: #E2E8F0 !important;
+}
+
+html.light .bg-\[\#1F2228\]\/30 {
+  background-color: rgba(226, 232, 240, 0.4) !important;
+}
+
+html.light .bg-\[\#1F2228\]\/50 {
+  background-color: rgba(226, 232, 240, 0.6) !important;
+}
+
+html.light .border-\[\#1F2228\],
+html.light .border-\[\#1f2228\] {
+  border-color: #E2E8F0 !important;
+}
+
+html.light .border-\[\#14161A\],
+html.light .border-\[\#14161a\] {
+  border-color: #F1F5F9 !important;
+}
+
+html.light .text-white {
+  color: #0F172A !important;
+}
+
+html.light .text-\[\#E0E0E0\],
+html.light .text-\[\#e0e0e0\] {
+  color: #1E293B !important;
+}
+
+html.light .text-\[\#636A78\],
+html.light .text-\[\#636a78\] {
+  color: #64748B !important;
+}
+
+html.light .text-\[\#94A3B8\],
+html.light .text-\[\#94a3b8\] {
+  color: #475569 !important;
+}
+
+html.light aside,
+html.light .shadow-xl,
+html.light .shadow-2xl {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02) !important;
+}
+
+html.light input,
+html.light select,
+html.light textarea {
+  color-scheme: light !important;
+  color: #0F172A !important;
+}
+
+html.light nav.fixed.bottom-0 {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-top-color: #E2E8F0 !important;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light ::-webkit-scrollbar-thumb {
+  background-color: #CBD5E1 !important;
+}
+
+html.light ::-webkit-scrollbar-thumb:hover {
+  background-color: #94A3B8 !important;
 }
 
 @layer utilities {

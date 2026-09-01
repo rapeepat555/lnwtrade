@@ -78,7 +78,9 @@
         "name": { "type": "string" },
         "balance": { "type": "number" },
         "initialBalance": { "type": "number" },
-        "currency": { "type": "string" }
+        "currency": { "type": "string" },
+        "isArchived": { "type": "boolean" },
+        "archivedAt": { "type": "string" }
       },
       "required": ["name", "balance", "initialBalance", "currency"]
     },

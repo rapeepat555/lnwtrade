@@ -225,10 +225,10 @@ export function TradeForm({
             className="fixed inset-0 bg-zinc-900/40 backdrop-blur-sm z-[100]"
           />
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-[#14161A] rounded-2xl shadow-2xl z-[101] overflow-hidden border border-[#1F2228] h-[85vh] sm:h-[650px] max-h-[90vh] flex flex-col"
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-1.25rem)] sm:w-full max-w-xl bg-[#14161A] rounded-2xl sm:rounded-3xl shadow-2xl z-[101] overflow-hidden border border-[#1F2228] h-[92vh] sm:h-[800px] max-h-[95vh] flex flex-col"
           >
             <div className="relative flex-1 flex flex-col min-h-0">
               <AnimatePresence mode="wait">
@@ -272,62 +272,64 @@ export function TradeForm({
                     exit={{ x: 10, opacity: 0 }}
                     className="absolute inset-0 flex flex-col overflow-hidden"
                   >
-                    <div className="p-8 border-b border-[#1F2228] flex items-center justify-between bg-[#0A0B0E] shrink-0">
+                    <div className="p-5 sm:p-6 border-b border-[#1F2228] flex items-center justify-between bg-[#0A0B0E] shrink-0">
                       <div>
-                        <h3 className="text-xl font-serif text-white tracking-tight">
+                        <h3 className="text-lg sm:text-xl font-serif text-white tracking-tight">
                           {editingTrade ? 'Update Execution' : 'New Execution'}
                         </h3>
-                        <p className="text-xs text-[#636A78] font-medium">
+                        <p className="text-[11px] sm:text-xs text-[#636A78] font-medium">
                           {editingTrade ? 'Modify your trade data' : 'Log your market entry data'}
                         </p>
                       </div>
                       <button 
                         onClick={onClose}
                         disabled={isSubmitting}
-                        className="p-2 hover:bg-[#1F2228] rounded-lg transition-all text-[#636A78] hover:text-white disabled:opacity-50"
+                        className="p-1.5 sm:p-2 hover:bg-[#1F2228] rounded-xl transition-all text-[#636A78] hover:text-white disabled:opacity-50"
                       >
-                        <X className="w-5 h-5" />
+                        <X className="w-4 h-4 sm:w-5 sm:h-5" />
                       </button>
                     </div>
 
                     <form onSubmit={handleSubmit} className="flex-1 flex flex-col min-h-0">
-                      <div className="flex-1 overflow-y-auto p-8 space-y-6">
-                        <div className="space-y-2">
+                      <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3.5 sm:space-y-5">
+                        <div className="space-y-1.5">
                           <label className="text-[10px] font-bold uppercase tracking-widest text-[#636A78] px-1">Wallet / Workshop</label>
                           <select
                             disabled={isSubmitting}
                             onFocus={handleFocus}
-                            className="w-full bg-[#0A0B0E] px-4 py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-sm font-medium text-white appearance-none disabled:opacity-50"
+                            className="w-full bg-[#0A0B0E] px-3.5 py-2.5 sm:py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-xs sm:text-sm font-medium text-white appearance-none disabled:opacity-50"
                             value={formData.portfolioId}
                             onChange={e => setFormData({ ...formData, portfolioId: e.target.value })}
                           >
                             {portfolios.map(p => (
-                              <option key={`form-p-${p.id}`} value={p.id} className="bg-[#14161A]">{p.name}</option>
+                              <option key={`form-p-${p.id}`} value={p.id} className="bg-[#14161A]">
+                                {p.name}{p.isArchived ? ' (จัดเก็บแล้ว)' : ''}
+                              </option>
                             ))}
                           </select>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-6">
-                          <div className="space-y-2">
+                        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                          <div className="space-y-1.5">
                             <label className="text-[10px] font-bold uppercase tracking-widest text-[#636A78] px-1">Symbol</label>
                             <button
                               type="button"
                               disabled={isSubmitting}
                               onClick={() => setIsSelectorOpen(true)}
-                              className="w-full bg-[#0A0B0E] px-4 py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-sm font-medium transition-all text-white flex items-center justify-between hover:border-[#10B981] disabled:opacity-50"
+                              className="w-full bg-[#0A0B0E] px-3.5 py-2.5 sm:py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-xs sm:text-sm font-medium transition-all text-white flex items-center justify-between hover:border-[#10B981] disabled:opacity-50"
                             >
                               <span>{formData.symbol || 'Select Symbol'}</span>
                               <Search className="w-4 h-4 text-[#636A78]" />
                             </button>
                           </div>
-                          <div className="space-y-2">
+                          <div className="space-y-1.5">
                             <label className="text-[10px] font-bold uppercase tracking-widest text-[#636A78] px-1">Direction</label>
                             <div className="flex bg-[#0A0B0E] p-1 rounded-xl border border-[#1F2228]">
                               <button
                                 type="button"
                                 disabled={isSubmitting}
                                 onClick={() => setFormData({ ...formData, type: 'long' })}
-                                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all disabled:opacity-50 ${formData.type === 'long' ? 'bg-[#1F2228] text-[#10B981]' : 'text-[#636A78]'}`}
+                                className={`flex-1 py-1.5 sm:py-2 text-xs font-bold rounded-lg transition-all disabled:opacity-50 ${formData.type === 'long' ? 'bg-[#1F2228] text-[#10B981]' : 'text-[#636A78]'}`}
                               >
                                 BUY
                               </button>
@@ -335,7 +337,7 @@ export function TradeForm({
                                 type="button"
                                 disabled={isSubmitting}
                                 onClick={() => setFormData({ ...formData, type: 'short' })}
-                                className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all disabled:opacity-50 ${formData.type === 'short' ? 'bg-[#1F2228] text-rose-500' : 'text-[#636A78]'}`}
+                                className={`flex-1 py-1.5 sm:py-2 text-xs font-bold rounded-lg transition-all disabled:opacity-50 ${formData.type === 'short' ? 'bg-[#1F2228] text-rose-500' : 'text-[#636A78]'}`}
                               >
                                 SELL
                               </button>
@@ -343,8 +345,8 @@ export function TradeForm({
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-6">
-                          <div className="space-y-2">
+                        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                          <div className="space-y-1.5">
                             <label className="text-[10px] font-bold uppercase tracking-widest text-[#636A78] px-1">Entry Price</label>
                             <input
                               required
@@ -353,12 +355,12 @@ export function TradeForm({
                               type="number"
                               step="any"
                               placeholder="0.00"
-                              className="w-full bg-[#0A0B0E] px-4 py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-sm font-medium font-mono text-white disabled:opacity-50"
+                              className="w-full bg-[#0A0B0E] px-3.5 py-2.5 sm:py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-xs sm:text-sm font-medium font-mono text-white disabled:opacity-50"
                               value={formData.entryPrice}
                               onChange={e => setFormData({ ...formData, entryPrice: e.target.value })}
                             />
                           </div>
-                          <div className="space-y-2">
+                          <div className="space-y-1.5">
                             <label className="text-[10px] font-bold uppercase tracking-widest text-[#636A78] px-1">Exit Price</label>
                             <input
                               type="number"
@@ -366,15 +368,15 @@ export function TradeForm({
                               onFocus={handleFocus}
                               step="any"
                               placeholder="0.00"
-                              className="w-full bg-[#0A0B0E] px-4 py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-sm font-medium font-mono text-white disabled:opacity-50"
+                              className="w-full bg-[#0A0B0E] px-3.5 py-2.5 sm:py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-xs sm:text-sm font-medium font-mono text-white disabled:opacity-50"
                               value={formData.exitPrice}
                               onChange={e => setFormData({ ...formData, exitPrice: e.target.value })}
                             />
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 gap-6">
-                          <div className="space-y-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                          <div className="space-y-1.5">
                             <label className="text-[10px] font-bold uppercase tracking-widest text-[#636A78] px-1">Stop Loss</label>
                             <input
                               type="number"
@@ -382,62 +384,59 @@ export function TradeForm({
                               onFocus={handleFocus}
                               step="any"
                               placeholder="0.00"
-                              className="w-full bg-[#0A0B0E] px-4 py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-rose-500 text-sm font-medium font-mono text-white disabled:opacity-50"
+                              className="w-full bg-[#0A0B0E] px-3.5 py-2.5 sm:py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-rose-500 text-xs sm:text-sm font-medium font-mono text-white disabled:opacity-50"
                               value={formData.stopLoss}
                               onChange={e => setFormData({ ...formData, stopLoss: e.target.value })}
                             />
                           </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 gap-6">
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-bold uppercase tracking-widest text-[#636A78] px-1">ค่าธรรมเนียม (Commission/Fee)</label>
+                          <div className="space-y-1.5">
+                            <label className="text-[10px] font-bold uppercase tracking-widest text-[#636A78] px-1">Commission / Fee</label>
                             <input
                               type="number"
                               disabled={isSubmitting}
                               onFocus={handleFocus}
                               step="any"
                               placeholder="0.00"
-                              className="w-full bg-[#0A0B0E] px-4 py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-sm font-medium font-mono text-white disabled:opacity-50"
+                              className="w-full bg-[#0A0B0E] px-3.5 py-2.5 sm:py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-xs sm:text-sm font-medium font-mono text-white disabled:opacity-50"
                               value={formData.commission}
                               onChange={e => setFormData({ ...formData, commission: e.target.value })}
                             />
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-6">
-                          <div className="space-y-2">
+                        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                          <div className="space-y-1.5">
                             <label className="text-[10px] font-bold uppercase tracking-widest text-[#636A78] px-1">Entry Time</label>
                             <input
                               required
                               disabled={isSubmitting}
                               onFocus={handleFocus}
                               type="datetime-local"
-                              className="w-full bg-[#0A0B0E] px-4 py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-sm font-medium text-white [color-scheme:dark] disabled:opacity-50"
+                              className="w-full bg-[#0A0B0E] px-3.5 py-2.5 sm:py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-xs sm:text-sm font-medium text-white [color-scheme:dark] disabled:opacity-50"
                               value={formData.entryDate}
                               onChange={e => setFormData({ ...formData, entryDate: e.target.value })}
                             />
                           </div>
-                          <div className="space-y-2">
+                          <div className="space-y-1.5">
                             <label className="text-[10px] font-bold uppercase tracking-widest text-[#636A78] px-1">Exit Time</label>
                             <input
                               type="datetime-local"
                               disabled={isSubmitting}
                               onFocus={handleFocus}
-                              className="w-full bg-[#0A0B0E] px-4 py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-sm font-medium text-white [color-scheme:dark] disabled:opacity-50"
+                              className="w-full bg-[#0A0B0E] px-3.5 py-2.5 sm:py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-xs sm:text-sm font-medium text-white [color-scheme:dark] disabled:opacity-50"
                               value={formData.exitDate}
                               onChange={e => setFormData({ ...formData, exitDate: e.target.value })}
                             />
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-6">
-                          <div className="space-y-2">
+                        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                          <div className="space-y-1.5">
                             <label className="text-[10px] font-bold uppercase tracking-widest text-[#636A78] px-1">Session</label>
                             <select
                               disabled={isSubmitting}
                               onFocus={handleFocus}
-                              className="w-full bg-[#0A0B0E] px-4 py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-sm font-medium text-white appearance-none disabled:opacity-50"
+                              className="w-full bg-[#0A0B0E] px-3.5 py-2.5 sm:py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-xs sm:text-sm font-medium text-white appearance-none disabled:opacity-50"
                               value={formData.session}
                               onChange={e => setFormData({ ...formData, session: e.target.value })}
                             >
@@ -447,12 +446,12 @@ export function TradeForm({
                               <option value="Sydney">Sydney</option>
                             </select>
                           </div>
-                          <div className="space-y-2">
+                          <div className="space-y-1.5">
                             <label className="text-[10px] font-bold uppercase tracking-widest text-[#636A78] px-1">Zone</label>
                             <select
                               disabled={isSubmitting}
                               onFocus={handleFocus}
-                              className="w-full bg-[#0A0B0E] px-4 py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-sm font-medium text-white appearance-none disabled:opacity-50"
+                              className="w-full bg-[#0A0B0E] px-3.5 py-2.5 sm:py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-xs sm:text-sm font-medium text-white appearance-none disabled:opacity-50"
                               value={formData.zone}
                               onChange={e => setFormData({ ...formData, zone: e.target.value })}
                             >
@@ -468,13 +467,13 @@ export function TradeForm({
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-6">
-                          <div className="space-y-2">
+                        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                          <div className="space-y-1.5">
                             <label className="text-[10px] font-bold uppercase tracking-widest text-[#636A78] px-1">Timeframe</label>
                             <select
                               disabled={isSubmitting}
                               onFocus={handleFocus}
-                              className="w-full bg-[#0A0B0E] px-4 py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-sm font-medium text-white appearance-none disabled:opacity-50"
+                              className="w-full bg-[#0A0B0E] px-3.5 py-2.5 sm:py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-xs sm:text-sm font-medium text-white appearance-none disabled:opacity-50"
                               value={formData.timeframe}
                               onChange={e => setFormData({ ...formData, timeframe: e.target.value })}
                             >
@@ -488,7 +487,7 @@ export function TradeForm({
                               <option value="W1">W1</option>
                             </select>
                           </div>
-                          <div className="space-y-2">
+                          <div className="space-y-1.5">
                             <label className="text-[10px] font-bold uppercase tracking-widest text-[#636A78] px-1">Lot Size</label>
                             <input
                               required
@@ -497,13 +496,13 @@ export function TradeForm({
                               type="number"
                               step="any"
                               placeholder="Volume"
-                              className="w-full bg-[#0A0B0E] px-4 py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-sm font-medium font-mono text-white disabled:opacity-50"
+                              className="w-full bg-[#0A0B0E] px-3.5 py-2.5 sm:py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-xs sm:text-sm font-medium font-mono text-white disabled:opacity-50"
                               value={formData.quantity}
                               onChange={e => setFormData({ ...formData, quantity: e.target.value })}
                             />
                           </div>
                         </div>
-                          <div className="space-y-2">
+                          <div className="space-y-1.5">
                             <label className="text-[10px] font-bold uppercase tracking-widest text-[#636A78] px-1 flex items-center justify-between">
                               Setup Type
                               <button 
@@ -518,7 +517,7 @@ export function TradeForm({
                             <select
                               disabled={isSubmitting}
                               onFocus={handleFocus}
-                              className="w-full bg-[#0A0B0E] px-4 py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-sm font-medium text-white appearance-none disabled:opacity-50"
+                              className="w-full bg-[#0A0B0E] px-3.5 py-2.5 sm:py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-xs sm:text-sm font-medium text-white appearance-none disabled:opacity-50"
                               value={formData.setup}
                               onChange={e => setFormData({ ...formData, setup: e.target.value })}
                             >
@@ -529,14 +528,14 @@ export function TradeForm({
                             </select>
                           </div>
 
-                        <div className="space-y-2">
+                        <div className="space-y-1.5">
                           <label className="text-[10px] font-bold uppercase tracking-widest text-[#636A78] px-1">Journal Entry</label>
                           <textarea
                             disabled={isSubmitting}
                             onFocus={handleFocus}
                             placeholder="What did you see in the charts?"
                             rows={3}
-                            className="w-full bg-[#0A0B0E] px-4 py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-sm font-medium resize-none transition-all text-white disabled:opacity-50"
+                            className="w-full bg-[#0A0B0E] px-3.5 py-2.5 sm:py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-xs sm:text-sm font-medium resize-none transition-all text-white disabled:opacity-50"
                             value={formData.notes}
                             onChange={e => setFormData({ ...formData, notes: e.target.value })}
                           />
@@ -580,18 +579,18 @@ export function TradeForm({
                         </div>
                       </div>
 
-                      <div className="p-8 pt-6 border-t border-[#1F2228] bg-[#0A0B0E] shrink-0">
+                      <div className="p-3 sm:p-4 border-t border-[#1F2228] bg-[#0A0B0E] shrink-0">
                         <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="w-full bg-[#10B981] text-[#0A0B0E] py-4 rounded-lg font-bold text-sm tracking-tight hover:opacity-90 transition-all shadow-lg shadow-[#10B981]/10 flex items-center justify-center gap-2 disabled:opacity-50"
+                          className="w-full bg-[#10B981] text-[#0A0B0E] py-2.5 sm:py-3 px-4 rounded-xl font-bold text-xs sm:text-sm tracking-wide hover:opacity-90 active:scale-[0.99] transition-all shadow-md shadow-[#10B981]/15 flex items-center justify-center gap-2 disabled:opacity-50"
                         >
                           {isSubmitting ? (
-                            <div className="w-5 h-5 border-2 border-[#0A0B0E]/30 border-t-[#0A0B0E] rounded-full animate-spin" />
+                            <div className="w-4 h-4 border-2 border-[#0A0B0E]/30 border-t-[#0A0B0E] rounded-full animate-spin" />
                           ) : (
-                            <Plus className="w-5 h-5" />
+                            <Plus className="w-4 h-4" />
                           )}
-                          {isSubmitting ? 'SYNCING...' : editingTrade ? 'UPDATE TRADE DATA' : 'LOG NEW TRADE'}
+                          <span>{isSubmitting ? 'SYNCING...' : editingTrade ? 'UPDATE TRADE DATA' : 'LOG NEW TRADE'}</span>
                         </button>
                       </div>
                     </form>

@@ -87,6 +87,17 @@ export function useTradingData(user: User | null, targetUserId?: string | null) 
       }
     }, (error) => {
       handleFirestoreError(error, OperationType.GET, 'portfolios', false);
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed.portfolios && parsed.portfolios.length > 0) {
+            setPortfolios(parsed.portfolios);
+          }
+        }
+      } catch (e) {
+        console.warn("Offline portfolio fallback failed:", e);
+      }
     });
 
     // 2. Trades Listener
@@ -130,6 +141,17 @@ export function useTradingData(user: User | null, targetUserId?: string | null) 
       setTrades(processedTrades);
     }, (error) => {
       handleFirestoreError(error, OperationType.GET, 'trades', false);
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed.trades && parsed.trades.length > 0) {
+            setTrades(parsed.trades);
+          }
+        }
+      } catch (e) {
+        console.warn("Offline trades fallback failed:", e);
+      }
     });
 
     // 3. Setups Listener
@@ -164,6 +186,20 @@ export function useTradingData(user: User | null, targetUserId?: string | null) 
         }
       }
       setLoading(false); // Fully loaded once all major listeners report back
+    }, (error) => {
+      handleFirestoreError(error, OperationType.GET, 'setups', false);
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed.setups && parsed.setups.length > 0) {
+            setSetups(parsed.setups);
+          }
+        }
+      } catch (e) {
+        console.warn("Offline setups fallback failed:", e);
+      }
+      setLoading(false);
     });
 
     return () => {
@@ -460,6 +496,25 @@ export function useTradingData(user: User | null, targetUserId?: string | null) 
       const p = portfolios.find(p => p.id === id);
       if (!p) return;
       await syncPortfolio({ ...p, ...updates });
+    },
+    archivePortfolio: async (id: string, isArchived: boolean = true) => {
+      const p = portfolios.find(port => port.id === id);
+      if (!p) return;
+      const updated: Portfolio = {
+        ...p,
+        isArchived,
+        archivedAt: isArchived ? new Date().toISOString() : undefined
+      };
+      
+      // If archiving the currently active portfolio, switch to the first remaining unarchived wallet
+      if (isArchived && activePortfolioId === id) {
+        const remainingActive = portfolios.filter(port => port.id !== id && !port.isArchived);
+        if (remainingActive.length > 0) {
+          setActivePortfolioId(remainingActive[0].id);
+        }
+      }
+      
+      await syncPortfolio(updated);
     },
     deletePortfolio: async (id: string) => {
       if (!user || portfolios.length <= 1) return;

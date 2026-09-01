@@ -33,6 +33,8 @@ export interface Portfolio {
   balance: number;
   initialBalance: number;
   currency: string;
+  isArchived?: boolean;
+  archivedAt?: string;
   transactions?: Transaction[];
 }
 
