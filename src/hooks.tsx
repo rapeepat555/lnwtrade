@@ -28,10 +28,64 @@ const generateId = () => {
 
 export function useTradingData(user: User | null, targetUserId?: string | null) {
   const [loading, setLoading] = useState(true);
-  const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
-  const [trades, setTrades] = useState<Trade[]>([]);
-  const [setups, setSetups] = useState<string[]>(['Breakout', 'Pullback', 'Reversal', 'Scalp', 'Trend Following']);
+  const [portfolios, setPortfolios] = useState<Portfolio[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed.portfolios) && parsed.portfolios.length > 0) {
+          return parsed.portfolios;
+        }
+      }
+    } catch (e) {
+      console.warn("Error loading cached portfolios:", e);
+    }
+    return [];
+  });
+  const [trades, setTrades] = useState<Trade[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed.trades) && parsed.trades.length > 0) {
+          return parsed.trades;
+        }
+      }
+    } catch (e) {
+      console.warn("Error loading cached trades:", e);
+    }
+    return [];
+  });
+  const [setups, setSetups] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed.setups) && parsed.setups.length > 0) {
+          return parsed.setups;
+        }
+      }
+    } catch (e) {
+      console.warn("Error loading cached setups:", e);
+    }
+    return ['Breakout', 'Pullback', 'Reversal', 'Scalp', 'Trend Following'];
+  });
   const [activePortfolioId, setActivePortfolioId] = useState<string>('default');
+
+  // Auto-mirror all active data to local storage for permanent offline & quota-proof access
+  useEffect(() => {
+    if (!targetUserId && (portfolios.length > 0 || trades.length > 0)) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          portfolios,
+          trades,
+          setups
+        }));
+      } catch (e) {
+        console.warn("Failed to persist data snapshot:", e);
+      }
+    }
+  }, [portfolios, trades, setups, targetUserId]);
 
   useEffect(() => {
     if (portfolios.length > 0) {

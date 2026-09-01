@@ -19,7 +19,10 @@ import {
   Camera,
   Edit,
   Trash2,
-  Star
+  Star,
+  Download,
+  Upload,
+  CheckCircle2
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { compressImage } from '../lib/image';
@@ -574,9 +577,82 @@ export function UserProfile({
                 </div>
               </div>
 
-              <div className="bg-[#14161A] p-6 rounded-3xl border-2 border-[#1F2228]">
-                <div className="flex flex-col">
-                  <span className="text-[10px] font-black text-[#636A78] uppercase tracking-[.25em] mb-4">Account Control</span>
+              <div className="bg-[#14161A] p-6 rounded-3xl border-2 border-[#1F2228] space-y-6">
+                <div>
+                  <span className="text-[10px] font-black text-[#636A78] uppercase tracking-[.25em] mb-4 block">Data Backup & Sync (Offline-Proof)</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button 
+                      onClick={() => {
+                        try {
+                          const journalData = localStorage.getItem('tradetrack_pro_data');
+                          const profileData = localStorage.getItem('trader_profile');
+                          const questsData = localStorage.getItem('trader_quests');
+                          const exportObj = {
+                            version: 1,
+                            exportedAt: new Date().toISOString(),
+                            journal: journalData ? JSON.parse(journalData) : null,
+                            profile: profileData ? JSON.parse(profileData) : null,
+                            quests: questsData ? JSON.parse(questsData) : null
+                          };
+                          const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj, null, 2));
+                          const downloadAnchor = document.createElement('a');
+                          downloadAnchor.setAttribute("href", dataStr);
+                          downloadAnchor.setAttribute("download", `trader_backup_${new Date().toISOString().split('T')[0]}.json`);
+                          document.body.appendChild(downloadAnchor);
+                          downloadAnchor.click();
+                          downloadAnchor.remove();
+                        } catch (e) {
+                          alert("Export failed: " + e);
+                        }
+                      }}
+                      className="flex items-center justify-center gap-2 px-4 py-3 bg-[#10B981]/10 text-[#10B981] hover:bg-[#10B981] hover:text-black rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border border-[#10B981]/20 cursor-pointer active:scale-95"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      Backup Data (.json)
+                    </button>
+
+                    <label className="flex items-center justify-center gap-2 px-4 py-3 bg-[#1F2228] text-[#E0E0E0] hover:text-white hover:bg-[#2A2E37] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border border-[#1F2228] cursor-pointer active:scale-95">
+                      <Upload className="w-3.5 h-3.5 text-[#10B981]" />
+                      Restore Data (.json)
+                      <input 
+                        type="file" 
+                        accept=".json" 
+                        className="hidden" 
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          const reader = new FileReader();
+                          reader.onload = (event) => {
+                            try {
+                              const content = event.target?.result as string;
+                              const parsed = JSON.parse(content);
+                              if (parsed.journal) {
+                                localStorage.setItem('tradetrack_pro_data', JSON.stringify(parsed.journal));
+                              }
+                              if (parsed.profile) {
+                                localStorage.setItem('trader_profile', JSON.stringify(parsed.profile));
+                              }
+                              if (parsed.quests) {
+                                localStorage.setItem('trader_quests', JSON.stringify(parsed.quests));
+                              }
+                              alert("Import successful! Reloading data...");
+                              window.location.reload();
+                            } catch (err) {
+                              alert("Failed to parse JSON file: " + err);
+                            }
+                          };
+                          reader.readAsText(file);
+                        }}
+                      />
+                    </label>
+                  </div>
+                  <p className="text-[10px] text-[#636A78] mt-2">
+                    💡 สามารถดาวน์โหลดไฟล์สำรองเก็บไว้ และนำไปกด Restore บน Vercel หรือเครื่องอื่นๆ ได้ทันที
+                  </p>
+                </div>
+
+                <div className="pt-4 border-t border-[#1F2228]">
+                  <span className="text-[10px] font-black text-[#636A78] uppercase tracking-[.25em] mb-4 block">Account Control</span>
                   {readOnly ? (
                     <p className="text-[10px] text-[#636A78] font-bold uppercase tracking-widest italic py-2">
                       Administrative access restricted in observation mode.
@@ -584,11 +660,14 @@ export function UserProfile({
                   ) : (
                     <button 
                       onClick={() => {
+                        if (confirm("Are you sure you want to reset all progress? This cannot be undone.")) {
                           localStorage.removeItem('trader_profile');
                           localStorage.removeItem('trader_quests');
+                          localStorage.removeItem('tradetrack_pro_data');
                           window.location.reload();
+                        }
                       }}
-                      className="flex items-center justify-center gap-2 px-4 py-2 bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border border-rose-500/20"
+                      className="flex items-center justify-center gap-2 px-4 py-2 bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border border-rose-500/20 w-full"
                     >
                       Reset All Progress
                     </button>
