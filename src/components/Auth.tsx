@@ -55,7 +55,7 @@ export function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0B0E] flex items-center justify-center p-3 sm:p-4 selection:bg-[#10B981]/20 selection:text-white relative overflow-hidden">
+    <div className="fixed inset-0 w-full h-full min-h-[100dvh] max-h-[100dvh] bg-[#0A0B0E] flex items-center justify-center p-3 sm:p-4 selection:bg-[#10B981]/20 selection:text-white overflow-y-auto overscroll-none">
       {/* Background Decor */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#10B981]/5 blur-[120px] rounded-full animate-pulse" />
