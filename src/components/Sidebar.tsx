@@ -106,25 +106,25 @@ export function Sidebar({ activeTab, setActiveTab, isCollapsed, setIsCollapsed }
       </motion.aside>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0A0B0E] border-t border-[#1F2228] flex items-center justify-around px-2 z-[100] pb-[calc(env(safe-area-inset-bottom,24px)+4px)] pt-2 overflow-x-auto no-scrollbar shadow-[0_-8px_20px_rgba(0,0,0,0.5)]">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0A0B0E]/95 backdrop-blur-md border-t border-[#1F2228] flex items-center justify-around px-2 z-[100] pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))] overflow-x-auto no-scrollbar shadow-[0_-8px_20px_rgba(0,0,0,0.5)]">
         {navItems.map((item) => (
           <button
             key={item.id}
             onClick={() => setActiveTab(item.id)}
             className={cn(
-              "flex flex-col items-center justify-center min-w-[64px] h-[52px] rounded-xl transition-all duration-300",
+              "flex flex-col items-center justify-center min-w-[60px] py-1 px-2 rounded-xl transition-all duration-300",
               activeTab === item.id 
                 ? "text-[#10B981] bg-[#10B981]/10 scale-105" 
                 : "text-[#636A78] hover:text-[#E0E0E0]"
             )}
           >
             <item.icon className={cn(
-              "w-5.5 h-5.5 mb-1 transition-transform",
-              activeTab === item.id && "scale-110"
+              "w-5 h-5 mb-0.5 transition-transform",
+              activeTab === item.id && "scale-110 text-[#10B981]"
             )} />
             <span className={cn(
-              "text-[9px] font-black uppercase tracking-tighter",
-              activeTab === item.id ? "opacity-100" : "opacity-80"
+              "text-[9px] font-black uppercase tracking-tight",
+              activeTab === item.id ? "opacity-100 font-bold" : "opacity-80"
             )}>
               {item.label}
             </span>
