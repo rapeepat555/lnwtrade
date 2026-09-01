@@ -46,11 +46,26 @@ export function Auth() {
   };
 
   const handleGoogleSignIn = async () => {
+    setError('');
+    setSuccess('');
+    setLoading(true);
     const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: 'select_account' });
     try {
       await signInWithPopup(auth, provider);
     } catch (err: any) {
-      setError(err.message);
+      console.error('Google sign in error:', err);
+      if (err.code === 'auth/popup-blocked') {
+        setError('เบราว์เซอร์บล็อกหน้าต่าง Popup กรุณากดอนุญาต Popup หรือเปิดใน Chrome/Safari');
+      } else if (err.code === 'auth/unauthorized-domain') {
+        setError('โดเมนนี้ยังไม่ได้รับอนุญาตใน Firebase Authentication (Authorized Domains)');
+      } else if (err.code === 'auth/popup-closed-by-user') {
+        setError('คุณปิดหน้าต่างเข้าสู่ระบบก่อนดำเนินการเสร็จสิ้น');
+      } else {
+        setError(err.message || 'เกิดข้อผิดพลาดในการเข้าสู่ระบบด้วย Google');
+      }
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -331,6 +331,19 @@ export default function App() {
         }
       } catch (error) {
         handleFirestoreError(error, OperationType.GET, 'users/profile_and_quests', false);
+        // Graceful offline fallback
+        try {
+          const savedProfile = localStorage.getItem('trader_profile');
+          if (savedProfile) {
+            setUserProfile(recalculateLevelProgress(JSON.parse(savedProfile)));
+          }
+          const savedQuests = localStorage.getItem('trader_quests');
+          if (savedQuests) {
+            setQuests(JSON.parse(savedQuests));
+          }
+        } catch (e) {
+          console.warn("Offline fallback read error:", e);
+        }
       } finally {
         setDataLoading(false);
       }
