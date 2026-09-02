@@ -38,30 +38,46 @@
 
 /* Light Theme Component Overrides */
 html.light .bg-\[\#0A0B0E\],
-html.light .bg-\[\#0a0b0e\] {
+html.light .bg-\[\#0a0b0e\],
+html.light .bg-\[\#0D0E12\],
+html.light .bg-\[\#0d0e12\],
+html.light .bg-\[\#07080a\],
+html.light .bg-\[\#0F1115\],
+html.light .bg-\[\#111317\],
+html.light [class*="bg-[#0A0B0E]"],
+html.light [class*="bg-[#0a0b0e]"],
+html.light [class*="bg-[#0D0E12]"] {
   background-color: #F4F6F9 !important;
 }
 
 html.light .bg-\[\#14161A\],
-html.light .bg-\[\#14161a\] {
+html.light .bg-\[\#14161a\],
+html.light [class*="bg-[#14161A]"],
+html.light [class*="bg-[#14161a]"] {
   background-color: #FFFFFF !important;
 }
 
 html.light .bg-\[\#1F2228\],
-html.light .bg-\[\#1f2228\] {
+html.light .bg-\[\#1f2228\],
+html.light .bg-\[\#252830\],
+html.light .bg-\[\#2A2E37\],
+html.light .bg-\[\#2D3139\],
+html.light [class*="bg-[#1F2228]"],
+html.light [class*="bg-[#1f2228]"] {
   background-color: #E2E8F0 !important;
 }
 
-html.light .bg-\[\#1F2228\]\/30 {
-  background-color: rgba(226, 232, 240, 0.4) !important;
-}
-
+html.light .bg-\[\#1F2228\]\/30,
 html.light .bg-\[\#1F2228\]\/50 {
   background-color: rgba(226, 232, 240, 0.6) !important;
 }
 
 html.light .border-\[\#1F2228\],
-html.light .border-\[\#1f2228\] {
+html.light .border-\[\#1f2228\],
+html.light .border-\[\#2F333C\],
+html.light .border-\[\#2A2E37\],
+html.light [class*="border-[#1F2228]"],
+html.light [class*="border-[#1f2228]"] {
   border-color: #E2E8F0 !important;
 }
 
@@ -85,7 +101,9 @@ html.light .text-\[\#636a78\] {
 }
 
 html.light .text-\[\#94A3B8\],
-html.light .text-\[\#94a3b8\] {
+html.light .text-\[\#94a3b8\],
+html.light .text-\[\#A0A5B1\],
+html.light .text-\[\#A1A8B6\] {
   color: #475569 !important;
 }
 
@@ -100,12 +118,21 @@ html.light select,
 html.light textarea {
   color-scheme: light !important;
   color: #0F172A !important;
+  background-color: #FFFFFF !important;
 }
 
 html.light nav.fixed.bottom-0 {
   background-color: rgba(255, 255, 255, 0.95) !important;
   border-top-color: #E2E8F0 !important;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light table tbody tr:hover {
+  background-color: #F8FAFC !important;
+}
+
+html.light .markdown-body {
+  color: #1E293B !important;
 }
 
 html.light ::-webkit-scrollbar-thumb {

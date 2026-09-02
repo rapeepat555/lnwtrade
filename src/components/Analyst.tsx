@@ -419,7 +419,7 @@ export function Analyst({ setups }: AnalystProps) {
       {totalTrades > 0 && (
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Win / Loss / BE Proportions Bar */}
-          <div className="bg-[#14161A]/60 p-6 rounded-3xl border border-[#1F2228]/80 flex flex-col justify-between">
+          <div className="bg-[#14161A] p-6 rounded-3xl border border-[#1F2228] flex flex-col justify-between shadow-sm">
             <div>
               <h4 className="text-xs font-black uppercase tracking-widest text-[#636A78] mb-4 flex items-center gap-1.5">
                 <Activity className="w-3.5 h-3.5 text-[#10B981]" /> สัดส่วนแพ้ชนะ (Proportions)
@@ -434,7 +434,7 @@ export function Analyst({ setups }: AnalystProps) {
               <div className="w-full h-8 bg-[#1F2228] rounded-2xl overflow-hidden flex font-mono text-[10px] font-bold text-white">
                 {winCount > 0 && (
                   <div 
-                    className="bg-[#10B981] flex items-center justify-center transition-all hover:brightness-110" 
+                    className="bg-[#10B981] text-black flex items-center justify-center transition-all hover:brightness-110 font-black" 
                     style={{ width: `${(winCount / totalTrades) * 100}%` }}
                     title={`Wins: ${winCount}`}
                   >
@@ -443,7 +443,7 @@ export function Analyst({ setups }: AnalystProps) {
                 )}
                 {beCount > 0 && (
                   <div 
-                    className="bg-[#3B82F6] flex items-center justify-center transition-all hover:brightness-110" 
+                    className="bg-[#3B82F6] text-white flex items-center justify-center transition-all hover:brightness-110" 
                     style={{ width: `${(beCount / totalTrades) * 100}%` }}
                     title={`Breakeven: ${beCount}`}
                   >
@@ -452,7 +452,7 @@ export function Analyst({ setups }: AnalystProps) {
                 )}
                 {lossCount > 0 && (
                   <div 
-                    className="bg-rose-500 flex items-center justify-center transition-all hover:brightness-110" 
+                    className="bg-rose-500 text-white flex items-center justify-center transition-all hover:brightness-110" 
                     style={{ width: `${(lossCount / totalTrades) * 100}%` }}
                     title={`Losses: ${lossCount}`}
                   >
@@ -463,17 +463,17 @@ export function Analyst({ setups }: AnalystProps) {
 
               {/* Legend with absolute counts */}
               <div className="grid grid-cols-3 gap-2 pt-2">
-                <div className="bg-[#14161A] p-2 rounded-xl border border-[#1F2228] text-center">
+                <div className="bg-[#0A0B0E] p-2 rounded-xl border border-[#1F2228] text-center">
                   <span className="inline-block w-2 h-2 rounded-full bg-[#10B981] mr-1.5" />
                   <span className="text-[10px] font-bold text-[#636A78] uppercase">Win</span>
                   <p className="text-xs font-mono font-bold text-white mt-0.5">{winCount} Trades</p>
                 </div>
-                <div className="bg-[#14161A] p-2 rounded-xl border border-[#1F2228] text-center">
+                <div className="bg-[#0A0B0E] p-2 rounded-xl border border-[#1F2228] text-center">
                   <span className="inline-block w-2 h-2 rounded-full bg-[#3B82F6] mr-1.5" />
                   <span className="text-[10px] font-bold text-[#636A78] uppercase">BE</span>
                   <p className="text-xs font-mono font-bold text-white mt-0.5">{beCount} Trades</p>
                 </div>
-                <div className="bg-[#14161A] p-2 rounded-xl border border-[#1F2228] text-center">
+                <div className="bg-[#0A0B0E] p-2 rounded-xl border border-[#1F2228] text-center">
                   <span className="inline-block w-2 h-2 rounded-full bg-rose-500 mr-1.5" />
                   <span className="text-[10px] font-bold text-[#636A78] uppercase">Loss</span>
                   <p className="text-xs font-mono font-bold text-white mt-0.5">{lossCount} Trades</p>
@@ -483,7 +483,7 @@ export function Analyst({ setups }: AnalystProps) {
           </div>
 
           {/* Setup & Session Performance */}
-          <div className="bg-[#14161A]/60 p-6 rounded-3xl border border-[#1F2228]/80 flex flex-col justify-between">
+          <div className="bg-[#14161A] p-6 rounded-3xl border border-[#1F2228] flex flex-col justify-between shadow-sm">
             <div>
               <h4 className="text-xs font-black uppercase tracking-widest text-[#636A78] mb-4 flex items-center gap-1.5">
                 <BookOpen className="w-3.5 h-3.5 text-[#10B981]" /> ประสิทธิภาพตามช่วงเวลาและระบบ (Session & Setup)
@@ -534,7 +534,7 @@ export function Analyst({ setups }: AnalystProps) {
           </div>
 
           {/* Zones Breakdown */}
-          <div className="bg-[#14161A]/60 p-6 rounded-3xl border border-[#1F2228]/80 flex flex-col justify-between">
+          <div className="bg-[#14161A] p-6 rounded-3xl border border-[#1F2228] flex flex-col justify-between shadow-sm">
             <div>
               <h4 className="text-xs font-black uppercase tracking-widest text-[#636A78] mb-4 flex items-center gap-1.5">
                 <Layers className="w-3.5 h-3.5 text-[#10B981]" /> วิเคราะห์ตามจุดทดสอบ (Zone Performance)
@@ -550,9 +550,9 @@ export function Analyst({ setups }: AnalystProps) {
                       {zoneData.winRate}% Win <span className="text-[#636A78] font-normal text-[10px]">({zoneData.total}T)</span>
                     </span>
                   </div>
-                  <div className="w-full bg-[#1F2228]/50 h-1 rounded-full overflow-hidden">
+                  <div className="w-full bg-[#1F2228] h-1.5 rounded-full overflow-hidden">
                     <div 
-                      className="bg-[#10B981]/80 h-full rounded-full transition-all duration-300"
+                      className="bg-[#10B981] h-full rounded-full transition-all duration-300"
                       style={{ width: `${zoneData.winRate}%` }}
                     />
                   </div>
