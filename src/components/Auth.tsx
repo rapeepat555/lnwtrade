@@ -39,7 +39,23 @@ export function Auth() {
         setSuccess('Password reset link sent to your email.');
       }
     } catch (err: any) {
-      setError(err.message);
+      console.error('Auth error:', err);
+      const code = err?.code || '';
+      if (code === 'auth/operation-not-allowed') {
+        setError('ยังไม่ได้เปิดใช้งาน Email/Password ใน Firebase Authentication (กรุณาใช้ปุ่ม Authenticate with Google หรือเปิดใช้งาน Email/Password ใน Firebase Console)');
+      } else if (code === 'auth/email-already-in-use') {
+        setError('อีเมลนี้ถูกใช้งานแล้ว กรุณาเข้าสู่ระบบ หรือใช้อีเมลอื่น');
+      } else if (code === 'auth/weak-password') {
+        setError('รหัสผ่านสั้นเกินไป ต้องมีอย่างน้อย 6 ตัวอักษร');
+      } else if (code === 'auth/invalid-email') {
+        setError('รูปแบบอีเมลไม่ถูกต้อง');
+      } else if (code === 'auth/wrong-password' || code === 'auth/invalid-credential' || code === 'auth/user-not-found') {
+        setError('อีเมลหรือรหัสผ่านไม่ถูกต้อง');
+      } else if (code === 'auth/too-many-requests') {
+        setError('พยายามเข้าสู่ระบบบ่อยเกินไป กรุณารอสักครู่แล้วลองใหม่');
+      } else {
+        setError(err.message || 'เกิดข้อผิดพลาดในการตรวจสอบสิทธิ์');
+      }
     } finally {
       setLoading(false);
     }

@@ -270,27 +270,14 @@ export default function App() {
             }
           }
         } else {
-          // Check local storage for migration
-          const saved = localStorage.getItem('trader_profile');
-          if (saved) {
-            try {
-              const profile = recalculateLevelProgress(JSON.parse(saved));
-              await setDoc(profileRef, sanitizeData(profile));
-              setUserProfile(profile);
-            } catch (e) {
-              console.error("Failed to parse local profile:", e);
-              await setDoc(profileRef, sanitizeData(INITIAL_PROFILE));
-              setUserProfile(INITIAL_PROFILE);
-            }
-          } else {
-            const initialProfile = {
-              ...INITIAL_PROFILE,
-              id: user.uid,
-              name: user.displayName || user.email?.split('@')[0] || INITIAL_PROFILE.name
-            };
-            await setDoc(profileRef, sanitizeData(initialProfile));
-            setUserProfile(initialProfile);
-          }
+          // New user initial profile setup
+          const initialProfile = {
+            ...INITIAL_PROFILE,
+            id: user.uid,
+            name: user.displayName || user.email?.split('@')[0] || INITIAL_PROFILE.name
+          };
+          await setDoc(profileRef, sanitizeData(initialProfile));
+          setUserProfile(initialProfile);
         }
 
         // Load Quests
@@ -332,17 +319,8 @@ export default function App() {
 
           setQuests(loadedQuests);
         } else {
-          // Migration from local or initial
-          const savedQuestsRaw = localStorage.getItem('trader_quests');
-          let questsToSave = INITIAL_QUESTS;
-          if (savedQuestsRaw) {
-            try {
-              questsToSave = JSON.parse(savedQuestsRaw);
-            } catch (e) {
-              console.error("Failed to parse local quests:", e);
-            }
-          }
-          
+          // Fresh initial quests for new user
+          const questsToSave = INITIAL_QUESTS;
           const batch = writeBatch(db);
           questsToSave.forEach((q: Quest) => {
             const qRef = doc(collection(db, 'users', user.uid, 'quests'));
