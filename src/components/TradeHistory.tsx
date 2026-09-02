@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Trade, Portfolio } from '../types';
 import { formatCurrency, cn } from '../lib/utils';
-import { CheckCircle2, Clock, Trash2, ArrowUpRight, ArrowDownRight, Image as ImageIcon, Edit2, AlertTriangle, X, Briefcase, LayoutGrid, Calendar, Sparkles, TrendingUp, TrendingDown, Percent, Award, Activity, FileText, PieChart, BookOpen } from 'lucide-react';
+import { CheckCircle2, Clock, Trash2, ArrowUpRight, ArrowDownRight, Image as ImageIcon, Edit2, AlertTriangle, X, Briefcase, LayoutGrid, Calendar, Sparkles, TrendingUp, TrendingDown, Percent, Award, Activity, FileText, PieChart, BookOpen, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -25,6 +25,13 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
   const [selectedSetup, setSelectedSetup] = React.useState<string>('all');
   const [selectedPeriod, setSelectedPeriod] = useState<'all' | 'daily' | 'weekly' | 'monthly' | 'yearly'>('all');
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const pageSize = 10;
+
+  // Reset page to 1 whenever filters change
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedPortfolioId, selectedSetup, selectedPeriod]);
 
   const filteredTrades = React.useMemo(() => {
     const today = new Date();
@@ -56,6 +63,20 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
       })
       .sort((a, b) => new Date(b.entryDate).getTime() - new Date(a.entryDate).getTime());
   }, [trades, selectedPortfolioId, selectedSetup, selectedPeriod]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredTrades.length / pageSize));
+  
+  // Ensure currentPage is within bounds
+  React.useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [totalPages, currentPage]);
+
+  const paginatedTrades = React.useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return filteredTrades.slice(startIndex, startIndex + pageSize);
+  }, [filteredTrades, currentPage, pageSize]);
 
   const handleClose = (id: string) => {
     if (!exitPrice) return;
@@ -135,8 +156,18 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
       </header>
 
       <div className="bg-[#14161A] rounded-2xl border border-[#1F2228] shadow-sm overflow-hidden">
-        <div className="p-4 border-bottom border-[#1F2228] flex justify-between">
-          <h3 className="text-xs font-semibold text-[#636A78] uppercase">Recent Activity</h3>
+        <div className="p-4 border-b border-[#1F2228] flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <h3 className="text-xs font-semibold text-[#636A78] uppercase">Recent Activity</h3>
+            <span className="px-2 py-0.5 rounded-full bg-[#1F2228] text-[10px] font-bold text-[#E0E0E0]">
+              {filteredTrades.length}
+            </span>
+          </div>
+          {filteredTrades.length > 0 && (
+            <span className="text-[11px] text-[#636A78] font-medium">
+              Showing {(currentPage - 1) * pageSize + 1} - {Math.min(currentPage * pageSize, filteredTrades.length)} of {filteredTrades.length}
+            </span>
+          )}
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
@@ -154,11 +185,11 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
               </tr>
             </thead>
             <tbody className="text-xs text-[#E0E0E0] divide-y divide-[#1F2228]">
-              {filteredTrades.length === 0 ? (
+              {paginatedTrades.length === 0 ? (
                 <tr>
                   <td colSpan={readOnly ? 8 : 9} className="px-6 py-12 text-center text-[#636A78] italic">No trades logged yet.</td>
                 </tr>
-              ) : filteredTrades.map((trade, idx) => (
+              ) : paginatedTrades.map((trade, idx) => (
                 <tr 
                   key={trade.id ? `trade-row-${trade.id}-${idx}` : `trade-row-idx-${idx}`} 
                   className="hover:bg-[#1F2228] transition-colors group cursor-pointer"
@@ -290,6 +321,80 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Footer */}
+        {totalPages > 1 && (
+          <div className="p-4 border-t border-[#1F2228] flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#0D0E12]">
+            <div className="text-xs text-[#636A78] font-medium">
+              Page <span className="text-white font-bold">{currentPage}</span> of <span className="text-white font-bold">{totalPages}</span> ({filteredTrades.length} trades)
+            </div>
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => setCurrentPage(1)}
+                disabled={currentPage === 1}
+                className="p-2 rounded-xl bg-[#14161A] border border-[#1F2228] text-[#E0E0E0] hover:text-white hover:bg-[#1F2228] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                title="First Page"
+              >
+                <ChevronsLeft className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#14161A] border border-[#1F2228] text-xs font-bold text-[#E0E0E0] hover:text-white hover:bg-[#1F2228] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                <span>Prev</span>
+              </button>
+
+              {/* Page Number Buttons */}
+              <div className="flex items-center gap-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1)
+                  .filter(pageNum => {
+                    if (totalPages <= 5) return true;
+                    if (pageNum === 1 || pageNum === totalPages) return true;
+                    return Math.abs(pageNum - currentPage) <= 1;
+                  })
+                  .map((pageNum, idx, arr) => {
+                    const prevNum = arr[idx - 1];
+                    const showEllipsis = prevNum && pageNum - prevNum > 1;
+                    return (
+                      <React.Fragment key={`page-${pageNum}`}>
+                        {showEllipsis && <span className="px-1 text-xs text-[#636A78]">...</span>}
+                        <button
+                          onClick={() => setCurrentPage(pageNum)}
+                          className={cn(
+                            "w-8 h-8 rounded-xl text-xs font-bold transition-all border",
+                            currentPage === pageNum
+                              ? "bg-[#10B981] text-black border-[#10B981] shadow-md shadow-[#10B981]/10 font-black"
+                              : "bg-[#14161A] text-[#A0A5B1] border-[#1F2228] hover:bg-[#1F2228] hover:text-white"
+                          )}
+                        >
+                          {pageNum}
+                        </button>
+                      </React.Fragment>
+                    );
+                  })}
+              </div>
+
+              <button
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#14161A] border border-[#1F2228] text-xs font-bold text-[#E0E0E0] hover:text-white hover:bg-[#1F2228] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+              >
+                <span>Next</span>
+                <ChevronRight className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setCurrentPage(totalPages)}
+                disabled={currentPage === totalPages}
+                className="p-2 rounded-xl bg-[#14161A] border border-[#1F2228] text-[#E0E0E0] hover:text-white hover:bg-[#1F2228] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                title="Last Page"
+              >
+                <ChevronsRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <AnimatePresence>
