@@ -44,27 +44,27 @@ export function Sidebar({ activeTab, setActiveTab, isCollapsed, setIsCollapsed }
         animate={{ width: isCollapsed ? 80 : 256 }}
         className="hidden md:flex border-r border-[#1F2228] h-screen flex-col bg-[#0A0B0E] sticky top-0 transition-all duration-300 ease-in-out z-50 shadow-xl"
       >
-        <div className={cn("p-8 flex flex-col gap-1 overflow-hidden", isCollapsed && "items-center px-4")}>
+        <div className={cn("p-5 flex flex-col gap-0.5 overflow-hidden", isCollapsed && "items-center px-3 py-4")}>
           {!isCollapsed ? (
             <>
-              <h1 className="font-serif italic text-2xl text-white tracking-tight whitespace-nowrap">TraderJournal</h1>
-              <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#636A78] whitespace-nowrap">Professional Analytics</p>
+              <h1 className="font-serif italic text-xl text-white tracking-tight whitespace-nowrap">TraderJournal</h1>
+              <p className="text-[9px] uppercase tracking-[0.18em] font-bold text-[#636A78] whitespace-nowrap">Professional Analytics</p>
             </>
           ) : (
-            <div className="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center border border-emerald-500/20">
-              <PlusCircle className="text-[#10B981] w-6 h-6" />
+            <div className="w-8 h-8 bg-emerald-500/10 rounded-lg flex items-center justify-center border border-emerald-500/20">
+              <PlusCircle className="text-[#10B981] w-5 h-5" />
             </div>
           )}
         </div>
 
-        <nav className="flex-1 px-4 space-y-2 mt-4">
+        <nav className="flex-1 px-3 space-y-1 mt-2">
           {navItems.map((item) => (
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
               title={isCollapsed ? item.label : undefined}
               className={cn(
-                "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group text-sm font-medium overflow-hidden whitespace-nowrap",
+                "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg transition-all duration-200 group text-xs font-semibold overflow-hidden whitespace-nowrap",
                 activeTab === item.id 
                   ? "bg-[#1F2228] text-white" 
                   : "text-[#636A78] hover:text-white",
@@ -80,11 +80,11 @@ export function Sidebar({ activeTab, setActiveTab, isCollapsed, setIsCollapsed }
           ))}
         </nav>
 
-        <div className="p-4 border-t border-[#1F2228] space-y-2">
+        <div className="p-3 border-t border-[#1F2228] space-y-1">
           <button 
             onClick={signOut}
             className={cn(
-              "w-full flex items-center gap-3 px-4 py-3 rounded-lg text-[#636A78] hover:text-rose-500 text-sm font-medium transition-all group overflow-hidden whitespace-nowrap",
+              "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[#636A78] hover:text-rose-500 text-xs font-semibold transition-all group overflow-hidden whitespace-nowrap",
               isCollapsed && "justify-center px-0"
             )}
           >
@@ -95,7 +95,7 @@ export function Sidebar({ activeTab, setActiveTab, isCollapsed, setIsCollapsed }
           <button 
             onClick={() => setIsCollapsed(!isCollapsed)}
             className={cn(
-              "w-full flex items-center gap-3 px-4 py-3 rounded-lg text-[#636A78] hover:text-[#10B981] text-sm font-medium transition-all group overflow-hidden whitespace-nowrap",
+              "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[#636A78] hover:text-[#10B981] text-xs font-semibold transition-all group overflow-hidden whitespace-nowrap",
               isCollapsed && "justify-center px-0"
             )}
           >
@@ -106,25 +106,25 @@ export function Sidebar({ activeTab, setActiveTab, isCollapsed, setIsCollapsed }
       </motion.aside>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0A0B0E]/95 backdrop-blur-md border-t border-[#1F2228] flex items-center justify-around px-2 z-[100] pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))] overflow-x-auto no-scrollbar shadow-[0_-8px_20px_rgba(0,0,0,0.5)]">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0A0B0E]/95 backdrop-blur-md border-t border-[#1F2228] flex items-center justify-around px-1 z-[100] pt-1 pb-[max(0.35rem,env(safe-area-inset-bottom))] overflow-x-auto no-scrollbar shadow-[0_-8px_20px_rgba(0,0,0,0.5)]">
         {navItems.map((item) => (
           <button
             key={item.id}
             onClick={() => setActiveTab(item.id)}
             className={cn(
-              "flex flex-col items-center justify-center min-w-[60px] py-1 px-2 rounded-xl transition-all duration-300",
+              "flex flex-col items-center justify-center min-w-[54px] py-1 px-1.5 rounded-lg transition-all duration-200",
               activeTab === item.id 
-                ? "text-[#10B981] bg-[#10B981]/10 scale-105" 
+                ? "text-[#10B981] bg-[#10B981]/10" 
                 : "text-[#636A78] hover:text-[#E0E0E0]"
             )}
           >
             <item.icon className={cn(
-              "w-5 h-5 mb-0.5 transition-transform",
-              activeTab === item.id && "scale-110 text-[#10B981]"
+              "w-4 h-4 mb-0.5 transition-transform",
+              activeTab === item.id && "text-[#10B981]"
             )} />
             <span className={cn(
-              "text-[9px] font-black uppercase tracking-tight",
-              activeTab === item.id ? "opacity-100 font-bold" : "opacity-80"
+              "text-[8.5px] font-bold uppercase tracking-tight",
+              activeTab === item.id ? "opacity-100" : "opacity-75"
             )}>
               {item.label}
             </span>

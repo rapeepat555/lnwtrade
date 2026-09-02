@@ -15,7 +15,7 @@ import {
 import { subWeeks, subMonths, subYears, isAfter } from 'date-fns';
 import { Stats, Trade, Portfolio } from '../types';
 import { formatCurrency, formatPercentage, cn } from '../lib/utils';
-import { TrendingUp, TrendingDown, Target, Zap, Filter, LayoutGrid, Briefcase } from 'lucide-react';
+import { TrendingUp, TrendingDown, Target, Zap, Filter, LayoutGrid, Briefcase, ChevronDown } from 'lucide-react';
 import { TradeCalendar } from './TradeCalendar';
 
 interface DashboardProps {
@@ -233,49 +233,53 @@ export function Dashboard({ trades, portfolios, setups, readOnly }: DashboardPro
   const COLORS = ['#10B981', '#ef4444', '#1F2228'];
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-3xl font-serif text-white leading-tight">Portfolio Overview</h2>
-          <p className="text-[#636A78] text-sm mt-1">Key metrics and performance visualizer</p>
+          <h2 className="text-xl sm:text-2xl font-serif text-white leading-tight">Portfolio Overview</h2>
+          <p className="text-[#636A78] text-xs mt-0.5">Key metrics and performance visualizer</p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-2 bg-[#14161A] border border-[#1F2228] px-3 py-2 rounded-xl">
-            <Briefcase className="w-4 h-4 text-[#636A78]" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex items-center gap-2 w-full sm:w-auto">
+          {/* Wallet Dropdown */}
+          <div className="relative flex items-center gap-2 bg-[#14161A] border border-[#1F2228] px-3 py-1.5 rounded-xl w-full sm:w-auto min-w-[150px] shadow-sm hover:border-[#2D3139] transition-all">
+            <Briefcase className="w-3.5 h-3.5 text-[#10B981] shrink-0" />
             <select 
               value={selectedPortfolioId}
               onChange={(e) => setSelectedPortfolioId(e.target.value)}
-              className="bg-transparent text-xs font-bold text-[#E0E0E0] outline-none cursor-pointer pr-2"
+              className="bg-transparent text-xs font-bold text-[#E0E0E0] outline-none cursor-pointer pr-5 w-full appearance-none truncate"
             >
-              <option key="portfolio-all" value="all" className="bg-[#14161A]">All Wallets</option>
+              <option key="portfolio-all" value="all" className="bg-[#14161A] text-[#E0E0E0]">All Wallets (พอร์ตทั้งหมด)</option>
               {portfolios.map((p, i) => (
                 <option key={`portfolio-${p.id || 'p'}-${i}`} value={p.id} className="bg-[#14161A] text-white">
                   {p.name}{p.isArchived ? ' (จัดเก็บแล้ว)' : ''}
                 </option>
               ))}
             </select>
+            <ChevronDown className="w-3 h-3 text-[#636A78] absolute right-2.5 pointer-events-none" />
           </div>
 
-          <div className="flex items-center gap-2 bg-[#14161A] border border-[#1F2228] px-3 py-2 rounded-xl">
-            <LayoutGrid className="w-4 h-4 text-[#636A78]" />
+          {/* Setup Dropdown */}
+          <div className="relative flex items-center gap-2 bg-[#14161A] border border-[#1F2228] px-3 py-1.5 rounded-xl w-full sm:w-auto min-w-[150px] shadow-sm hover:border-[#2D3139] transition-all">
+            <LayoutGrid className="w-3.5 h-3.5 text-[#3B82F6] shrink-0" />
             <select 
               value={selectedSetup}
               onChange={(e) => setSelectedSetup(e.target.value)}
-              className="bg-transparent text-xs font-bold text-[#E0E0E0] outline-none cursor-pointer pr-2"
+              className="bg-transparent text-xs font-bold text-[#E0E0E0] outline-none cursor-pointer pr-5 w-full appearance-none truncate"
             >
-              <option key="setup-all" value="all" className="bg-[#14161A]">All Setups</option>
+              <option key="setup-all" value="all" className="bg-[#14161A] text-[#E0E0E0]">All Setups (ระบบทั้งหมด)</option>
               {setups.map((s, idx) => (
                 <option key={`setup-${s}-${idx}`} value={s} className="bg-[#14161A] text-white">
                   {s}
                 </option>
               ))}
             </select>
+            <ChevronDown className="w-3 h-3 text-[#636A78] absolute right-2.5 pointer-events-none" />
           </div>
         </div>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4">
         <StatCard 
           label="Current Balance" 
           value={formatCurrency(stats.currentBalance, stats.primaryCurrency)} 
@@ -319,11 +323,11 @@ export function Dashboard({ trades, portfolios, setups, readOnly }: DashboardPro
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 bg-[#14161A] p-8 rounded-2xl border border-[#1F2228]">
-          <div className="flex items-center justify-between mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="lg:col-span-2 bg-[#14161A] p-4 sm:p-5 rounded-xl border border-[#1F2228]">
+          <div className="flex items-center justify-between mb-4">
             <h3 className="text-xs font-semibold text-[#636A78] uppercase">Equity Curve</h3>
-            <div className="flex space-x-2">
+            <div className="flex space-x-1.5">
               {[
                 { id: '1W', label: '1W' },
                 { id: '1M', label: '1M' },
@@ -334,7 +338,7 @@ export function Dashboard({ trades, portfolios, setups, readOnly }: DashboardPro
                   key={range.id}
                   onClick={() => setSelectedTimeRange(range.id as any)}
                   className={cn(
-                    "text-[10px] px-2 py-1 rounded transition-all font-bold",
+                    "text-[9px] px-2 py-0.5 rounded transition-all font-bold",
                     selectedTimeRange === range.id 
                       ? "bg-[#10B981] text-[#0A0B0E]" 
                       : "bg-[#1F2228] text-[#E0E0E0] hover:bg-[#2D3139]"
@@ -345,7 +349,7 @@ export function Dashboard({ trades, portfolios, setups, readOnly }: DashboardPro
               ))}
             </div>
           </div>
-          <div className="h-[350px] w-full">
+          <div className="h-[260px] sm:h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData}>
                 <defs>
@@ -404,18 +408,18 @@ export function Dashboard({ trades, portfolios, setups, readOnly }: DashboardPro
           </div>
         </div>
 
-        <div className="bg-[#14161A] p-8 rounded-2xl border border-[#1F2228] flex flex-col">
-          <h3 className="text-xs font-semibold text-[#636A78] uppercase mb-8">Win/Loss Ratio</h3>
-          <div className="flex-1 min-h-[250px]">
+        <div className="bg-[#14161A] p-4 sm:p-5 rounded-xl border border-[#1F2228] flex flex-col">
+          <h3 className="text-xs font-semibold text-[#636A78] uppercase mb-4">Win/Loss Ratio</h3>
+          <div className="flex-1 min-h-[200px]">
              <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={winLossData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={60}
-                  outerRadius={80}
-                  paddingAngle={5}
+                  innerRadius={50}
+                  outerRadius={70}
+                  paddingAngle={4}
                   dataKey="value"
                   stroke="none"
                 >
@@ -430,14 +434,14 @@ export function Dashboard({ trades, portfolios, setups, readOnly }: DashboardPro
               </PieChart>
             </ResponsiveContainer>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-2 mt-2">
             {winLossData.map((d, i) => (
-              <div key={d.name} className="flex items-center justify-between">
+              <div key={`wl-item-${d.name}-${i}`} className="flex items-center justify-between p-1.5 rounded-lg bg-[#0A0B0E]/60 border border-[#1F2228]/60">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS[i] }}></div>
+                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS[i % COLORS.length] }}></div>
                   <span className="text-xs font-medium text-[#636A78]">{d.name}</span>
                 </div>
-                <span className="text-sm font-mono text-white">{d.value}</span>
+                <span className="text-xs font-mono font-bold text-white">{d.value}</span>
               </div>
             ))}
           </div>
@@ -454,24 +458,24 @@ export function Dashboard({ trades, portfolios, setups, readOnly }: DashboardPro
 function StatCard({ label, value, subValue, icon: Icon, trend, color }: any) {
   return (
     <motion.div 
-      whileHover={{ y: -4 }}
-      className="bg-[#14161A] p-6 rounded-2xl border border-[#1F2228]"
+      whileHover={{ y: -2 }}
+      className="bg-[#14161A] p-3.5 sm:p-4 rounded-xl border border-[#1F2228]"
     >
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex items-start justify-between gap-2.5">
         <div className="min-w-0 flex-1">
-          <p className="text-[10px] font-semibold text-[#636A78] uppercase tracking-wider mb-2 break-words whitespace-normal">{label}</p>
-          <p className={cn("text-lg sm:text-2xl font-mono text-white break-words whitespace-normal", color)}>
+          <p className="text-[9px] font-semibold text-[#636A78] uppercase tracking-wider mb-1 break-words whitespace-normal">{label}</p>
+          <p className={cn("text-base sm:text-xl font-mono text-white font-bold break-words whitespace-normal", color)}>
             {value}
           </p>
-          <p className="text-[10px] text-[#636A78] mt-2 font-medium italic break-words whitespace-normal">
+          <p className="text-[9px] text-[#636A78] mt-1 font-medium italic break-words whitespace-normal">
             {subValue}
           </p>
         </div>
         <div className={cn(
-          "w-10 h-10 rounded-lg flex items-center justify-center shrink-0",
+          "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
           trend === 'up' ? "bg-emerald-500/10 text-[#10B981]" : trend === 'down' ? "bg-rose-500/10 text-rose-500" : "bg-[#1F2228] text-white"
         )}>
-          <Icon className="w-5 h-5" />
+          <Icon className="w-4 h-4" />
         </div>
       </div>
     </motion.div>

@@ -347,18 +347,18 @@ export function Analyst({ setups }: AnalystProps) {
   );
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="space-y-4 sm:space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Header */}
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-[#10B981]/20 to-[#3B82F6]/20 rounded-2xl flex items-center justify-center border border-[#10B981]/30 shadow-lg shadow-[#10B981]/5">
-            <Brain className="text-[#10B981] w-6 h-6 animate-pulse" />
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+        <div className="flex items-center gap-2.5">
+          <div className="w-9 h-9 bg-gradient-to-br from-[#10B981]/20 to-[#3B82F6]/20 rounded-xl flex items-center justify-center border border-[#10B981]/30 shadow-md shadow-[#10B981]/5">
+            <Brain className="text-[#10B981] w-4 h-4 animate-pulse" />
           </div>
           <div>
-            <h2 className="text-3xl font-serif font-black tracking-tight italic text-white flex items-center gap-2">
+            <h2 className="text-xl sm:text-2xl font-serif font-black tracking-tight italic text-white flex items-center gap-2">
               AI Raphael Backtest
             </h2>
-            <p className="text-[#636A78] text-xs uppercase tracking-[0.2em] font-bold">
+            <p className="text-[#636A78] text-[10px] uppercase tracking-[0.18em] font-bold">
               สถิติและเครื่องมือวิเคราะห์ทดสอบย้อนหลังระดับโปร
             </p>
           </div>
@@ -366,33 +366,33 @@ export function Analyst({ setups }: AnalystProps) {
       </header>
 
       {/* Stats Dashboard */}
-      <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {/* Total Backtests */}
-        <div className="bg-[#14161A] p-5 rounded-3xl border border-[#1F2228] relative overflow-hidden group hover:border-[#10B981]/30 transition-all duration-300">
-          <div className="absolute top-4 right-4 p-2.5 bg-[#1F2228] rounded-xl text-[#636A78] group-hover:bg-[#10B981]/10 group-hover:text-[#10B981] transition-all">
-            <Activity className="w-5 h-5" />
+        <div className="bg-[#14161A] p-3.5 sm:p-4 rounded-xl border border-[#1F2228] relative overflow-hidden group hover:border-[#10B981]/30 transition-all duration-300">
+          <div className="absolute top-3 right-3 p-1.5 bg-[#1F2228] rounded-lg text-[#636A78] group-hover:bg-[#10B981]/10 group-hover:text-[#10B981] transition-all">
+            <Activity className="w-4 h-4" />
           </div>
-          <p className="text-[10px] font-bold text-[#636A78] uppercase tracking-[0.15em] mb-1">Total Backtests</p>
-          <p className="text-4xl font-serif font-black italic text-white leading-none mt-2">{totalTrades}</p>
-          <p className="text-[10px] text-[#636A78] mt-3 flex items-center gap-1 font-mono">
+          <p className="text-[9px] font-bold text-[#636A78] uppercase tracking-[0.15em] mb-0.5">Total Backtests</p>
+          <p className="text-2xl sm:text-3xl font-serif font-black italic text-white leading-none mt-1">{totalTrades}</p>
+          <p className="text-[9px] text-[#636A78] mt-2 flex items-center gap-1 font-mono">
             <span>{winCount} Wins</span> • <span>{lossCount} Losses</span> • <span>{beCount} BE</span>
           </p>
         </div>
 
         {/* Win Rate */}
-        <div className="bg-[#14161A] p-5 rounded-3xl border border-[#1F2228] relative overflow-hidden group hover:border-[#10B981]/30 transition-all duration-300">
-          <div className="absolute top-4 right-4 p-2.5 bg-[#1F2228] rounded-xl text-[#636A78] group-hover:bg-[#10B981]/10 group-hover:text-[#10B981] transition-all">
-            <Award className="w-5 h-5" />
+        <div className="bg-[#14161A] p-3.5 sm:p-4 rounded-xl border border-[#1F2228] relative overflow-hidden group hover:border-[#10B981]/30 transition-all duration-300">
+          <div className="absolute top-3 right-3 p-1.5 bg-[#1F2228] rounded-lg text-[#636A78] group-hover:bg-[#10B981]/10 group-hover:text-[#10B981] transition-all">
+            <Award className="w-4 h-4" />
           </div>
-          <p className="text-[10px] font-bold text-[#636A78] uppercase tracking-[0.15em] mb-1">Win Rate</p>
+          <p className="text-[9px] font-bold text-[#636A78] uppercase tracking-[0.15em] mb-0.5">Win Rate</p>
           <p className={cn(
-            "text-4xl font-serif font-black italic leading-none mt-2",
+            "text-2xl sm:text-3xl font-serif font-black italic leading-none mt-1",
             winRate >= 50 ? "text-[#10B981]" : winRate > 35 ? "text-[#F59E0B]" : "text-rose-500"
           )}>
             {winRate}%
           </p>
           {/* Radial representation */}
-          <div className="w-full bg-[#1F2228]/50 h-1.5 rounded-full mt-4 overflow-hidden">
+          <div className="w-full bg-[#1F2228]/50 h-1.5 rounded-full mt-2.5 overflow-hidden">
             <div 
               className={cn(
                 "h-full rounded-full transition-all duration-500",
@@ -404,30 +404,30 @@ export function Analyst({ setups }: AnalystProps) {
         </div>
 
         {/* Avg R:R */}
-        <div className="bg-[#14161A] p-5 rounded-3xl border border-[#1F2228] relative overflow-hidden group hover:border-[#10B981]/30 transition-all duration-300">
-          <div className="absolute top-4 right-4 p-2.5 bg-[#1F2228] rounded-xl text-[#636A78] group-hover:bg-[#10B981]/10 group-hover:text-[#10B981] transition-all">
-            <Target className="w-5 h-5" />
+        <div className="bg-[#14161A] p-3.5 sm:p-4 rounded-xl border border-[#1F2228] relative overflow-hidden group hover:border-[#10B981]/30 transition-all duration-300">
+          <div className="absolute top-3 right-3 p-1.5 bg-[#1F2228] rounded-lg text-[#636A78] group-hover:bg-[#10B981]/10 group-hover:text-[#10B981] transition-all">
+            <Target className="w-4 h-4" />
           </div>
-          <p className="text-[10px] font-bold text-[#636A78] uppercase tracking-[0.15em] mb-1">Avg Risk-Reward</p>
-          <p className="text-4xl font-serif font-black italic text-white leading-none mt-2">1:{avgRR}</p>
-          <p className="text-[10px] text-[#636A78] mt-3 font-mono">
+          <p className="text-[9px] font-bold text-[#636A78] uppercase tracking-[0.15em] mb-0.5">Avg Risk-Reward</p>
+          <p className="text-2xl sm:text-3xl font-serif font-black italic text-white leading-none mt-1">1:{avgRR}</p>
+          <p className="text-[9px] text-[#636A78] mt-2 font-mono">
             สัดส่วนเฉลี่ยของกำไรเทียบกับความเสี่ยง
           </p>
         </div>
 
         {/* Net R-Multiple */}
-        <div className="bg-[#14161A] p-5 rounded-3xl border border-[#1F2228] relative overflow-hidden group hover:border-[#10B981]/30 transition-all duration-300">
-          <div className="absolute top-4 right-4 p-2.5 bg-[#1F2228] rounded-xl text-[#636A78] group-hover:bg-[#10B981]/10 group-hover:text-[#10B981] transition-all">
-            {netRMultiple >= 0 ? <TrendingUp className="w-5 h-5 text-[#10B981]" /> : <TrendingDown className="w-5 h-5 text-rose-500" />}
+        <div className="bg-[#14161A] p-3.5 sm:p-4 rounded-xl border border-[#1F2228] relative overflow-hidden group hover:border-[#10B981]/30 transition-all duration-300">
+          <div className="absolute top-3 right-3 p-1.5 bg-[#1F2228] rounded-lg text-[#636A78] group-hover:bg-[#10B981]/10 group-hover:text-[#10B981] transition-all">
+            {netRMultiple >= 0 ? <TrendingUp className="w-4 h-4 text-[#10B981]" /> : <TrendingDown className="w-4 h-4 text-rose-500" />}
           </div>
-          <p className="text-[10px] font-bold text-[#636A78] uppercase tracking-[0.15em] mb-1">Net R-Multiple</p>
+          <p className="text-[9px] font-bold text-[#636A78] uppercase tracking-[0.15em] mb-0.5">Net R-Multiple</p>
           <p className={cn(
-            "text-4xl font-serif font-black italic leading-none mt-2",
+            "text-2xl sm:text-3xl font-serif font-black italic leading-none mt-1",
             netRMultiple >= 0 ? "text-[#10B981]" : "text-rose-500"
           )}>
             {netRMultiple >= 0 ? `+${netRMultiple}` : netRMultiple}R
           </p>
-          <p className="text-[10px] text-[#636A78] mt-3 font-mono">
+          <p className="text-[9px] text-[#636A78] mt-2 font-mono">
             ประสิทธิภาพความคุ้มค่ารวม (Total R)
           </p>
         </div>
@@ -537,8 +537,8 @@ export function Analyst({ setups }: AnalystProps) {
               <div className="border-t border-[#1F2228] pt-3">
                 <p className="text-[10px] font-bold text-[#636A78] uppercase tracking-wider mb-2">Top Performance Setups</p>
                 <div className="space-y-2 max-h-[100px] overflow-y-auto">
-                  {setupsBreakdown.slice(0, 3).map(setupData => (
-                    <div key={setupData.name} className="flex items-center justify-between text-xs">
+                  {setupsBreakdown.slice(0, 3).map((setupData, sIdx) => (
+                    <div key={`setup-bd-${setupData.name || 'unnamed'}-${sIdx}`} className="flex items-center justify-between text-xs">
                       <span className="text-[#A1A8B6] font-medium truncate max-w-[150px]">{setupData.name}</span>
                       <span className="text-[#10B981] font-mono font-bold">{setupData.winRate}% Win <span className="text-[#636A78] font-normal text-[10px]">({setupData.total}T)</span></span>
                     </div>
@@ -560,8 +560,8 @@ export function Analyst({ setups }: AnalystProps) {
             </div>
 
             <div className="space-y-3 max-h-[180px] overflow-y-auto pr-1">
-              {zonesBreakdown.map(zoneData => (
-                <div key={zoneData.name} className="space-y-1">
+              {zonesBreakdown.map((zoneData, zIdx) => (
+                <div key={`zone-bd-${zoneData.name || 'unnamed'}-${zIdx}`} className="space-y-1">
                   <div className="flex justify-between text-xs font-medium">
                     <span className="text-white truncate max-w-[180px]">{zoneData.name}</span>
                     <span className="font-mono text-[#10B981] font-bold">
@@ -919,8 +919,8 @@ export function Analyst({ setups }: AnalystProps) {
                   onChange={e => setFilterSetup(e.target.value)}
                 >
                   <option value="all">ระบบเทรดทั้งหมด</option>
-                  {Array.from(new Set(backtests.map(b => b.setup))).map(setupName => (
-                    <option key={setupName} value={setupName}>{setupName}</option>
+                  {Array.from(new Set(backtests.map(b => b.setup).filter(Boolean))).map((setupName, sIdx) => (
+                    <option key={`filter-setup-${setupName}-${sIdx}`} value={setupName}>{setupName}</option>
                   ))}
                 </select>
               </div>
@@ -1079,11 +1079,11 @@ export function Analyst({ setups }: AnalystProps) {
                 </div>
               ) : filteredBacktests.length > 0 ? (
                 <div className="space-y-3.5">
-                  {paginatedBacktests.map((b) => {
+                  {paginatedBacktests.map((b, bIdx) => {
                     const formattedDate = format(new Date(b.dateTime), 'MMM dd, yyyy HH:mm');
                     return (
                       <motion.div
-                        key={b.id}
+                        key={b.id ? `bt-card-${b.id}-${bIdx}` : `bt-card-idx-${bIdx}`}
                         layout
                         initial={{ opacity: 0, y: 15 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -1257,7 +1257,7 @@ export function Analyst({ setups }: AnalystProps) {
                         const showEllipsis = prev && pageNum - prev > 1;
 
                         return (
-                          <React.Fragment key={pageNum}>
+                          <React.Fragment key={`an-page-${pageNum}-${idx}`}>
                             {showEllipsis && <span className="text-xs text-[#636A78] px-1">...</span>}
                             <button
                               onClick={() => setCurrentPage(pageNum)}

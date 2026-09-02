@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Trade, Portfolio } from '../types';
 import { formatCurrency, cn } from '../lib/utils';
-import { CheckCircle2, Clock, Trash2, ArrowUpRight, ArrowDownRight, Image as ImageIcon, Edit2, AlertTriangle, X, Briefcase, LayoutGrid, Calendar, Sparkles, TrendingUp, TrendingDown, Percent, Award, Activity, FileText, PieChart, BookOpen, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { CheckCircle2, Clock, Trash2, ArrowUpRight, ArrowDownRight, Image as ImageIcon, Edit2, AlertTriangle, X, Briefcase, LayoutGrid, Calendar, Sparkles, TrendingUp, TrendingDown, Percent, Award, Activity, FileText, PieChart, BookOpen, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronDown } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -86,21 +86,21 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-4 sm:space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-3xl font-serif text-white tracking-tight leading-tight">Trade History</h2>
-          <p className="text-[#636A78] mt-1 text-sm">Detailed log of all your market executions</p>
+          <h2 className="text-xl sm:text-2xl font-serif text-white tracking-tight leading-tight">Trade History</h2>
+          <p className="text-[#636A78] mt-0.5 text-xs">Detailed log of all your market executions</p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           {/* Wallet Filter */}
-          <div className="flex items-center gap-2 bg-[#14161A] border border-[#1F2228] px-3 py-2 rounded-xl w-[calc(50%-5px)] sm:w-auto min-w-0">
-            <Briefcase className="w-4 h-4 text-[#636A78] shrink-0" />
+          <div className="relative flex items-center gap-1.5 bg-[#14161A] border border-[#1F2228] px-3 py-1.5 rounded-xl w-[calc(50%-4px)] sm:w-auto min-w-0 shadow-sm hover:border-[#2D3139] transition-all">
+            <Briefcase className="w-3.5 h-3.5 text-[#10B981] shrink-0" />
             <select 
               value={selectedPortfolioId}
               onChange={(e) => setSelectedPortfolioId(e.target.value)}
-              className="bg-transparent text-xs font-bold text-[#E0E0E0] outline-none cursor-pointer pr-2 w-full truncate"
+              className="bg-transparent text-xs font-bold text-[#E0E0E0] outline-none cursor-pointer pr-5 w-full truncate appearance-none"
             >
               <option key="portfolio-all" value="all" className="bg-[#14161A]">ทั้งหมด (Wallet)</option>
               {portfolios.map(p => (
@@ -109,15 +109,16 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
                 </option>
               ))}
             </select>
+            <ChevronDown className="w-3 h-3 text-[#636A78] absolute right-2 pointer-events-none" />
           </div>
 
           {/* Setup Filter */}
-          <div className="flex items-center gap-2 bg-[#14161A] border border-[#1F2228] px-3 py-2 rounded-xl w-[calc(50%-5px)] sm:w-auto min-w-0">
-            <LayoutGrid className="w-4 h-4 text-[#636A78] shrink-0" />
+          <div className="relative flex items-center gap-1.5 bg-[#14161A] border border-[#1F2228] px-3 py-1.5 rounded-xl w-[calc(50%-4px)] sm:w-auto min-w-0 shadow-sm hover:border-[#2D3139] transition-all">
+            <LayoutGrid className="w-3.5 h-3.5 text-[#3B82F6] shrink-0" />
             <select 
               value={selectedSetup}
               onChange={(e) => setSelectedSetup(e.target.value)}
-              className="bg-transparent text-xs font-bold text-[#E0E0E0] outline-none cursor-pointer pr-2 w-full truncate"
+              className="bg-transparent text-xs font-bold text-[#E0E0E0] outline-none cursor-pointer pr-5 w-full truncate appearance-none"
             >
               <option key="setup-all" value="all" className="bg-[#14161A]">ทั้งหมด (Setup)</option>
               {setups.map((s, idx) => (
@@ -126,15 +127,16 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
                 </option>
               ))}
             </select>
+            <ChevronDown className="w-3 h-3 text-[#636A78] absolute right-2 pointer-events-none" />
           </div>
 
           {/* Period Filter */}
-          <div className="flex items-center gap-2 bg-[#14161A] border border-[#1F2228] px-3 py-2 rounded-xl w-full sm:w-auto min-w-0">
-            <Calendar className="w-4 h-4 text-[#636A78] shrink-0" />
+          <div className="relative flex items-center gap-1.5 bg-[#14161A] border border-[#1F2228] px-3 py-1.5 rounded-xl w-full sm:w-auto min-w-0 shadow-sm hover:border-[#2D3139] transition-all">
+            <Calendar className="w-3.5 h-3.5 text-purple-400 shrink-0" />
             <select 
               value={selectedPeriod}
               onChange={(e) => setSelectedPeriod(e.target.value as any)}
-              className="bg-transparent text-xs font-bold text-[#E0E0E0] outline-none cursor-pointer pr-2 w-full truncate"
+              className="bg-transparent text-xs font-bold text-[#E0E0E0] outline-none cursor-pointer pr-5 w-full truncate appearance-none"
             >
               <option value="all" className="bg-[#14161A]">ช่วงเวลาทั้งหมด (All Time)</option>
               <option value="daily" className="bg-[#14161A]">รายวัน (Today)</option>
@@ -142,52 +144,53 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
               <option value="monthly" className="bg-[#14161A]">รายเดือน (This Month)</option>
               <option value="yearly" className="bg-[#14161A]">รายปี (This Year)</option>
             </select>
+            <ChevronDown className="w-3 h-3 text-[#636A78] absolute right-2 pointer-events-none" />
           </div>
 
           {/* Review Button */}
           <button
             onClick={() => setShowReviewModal(true)}
-            className="flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-[#10B981] to-emerald-600 hover:from-[#13d395] hover:to-emerald-500 text-black text-xs font-black rounded-xl hover:opacity-95 transition-all shadow-md shadow-[#10B981]/10 active:scale-95 cursor-pointer uppercase tracking-wider w-full sm:w-auto h-9"
+            className="flex items-center justify-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-[#10B981] to-emerald-600 hover:from-[#13d395] hover:to-emerald-500 text-black text-xs font-black rounded-xl hover:opacity-95 transition-all shadow-md shadow-[#10B981]/10 active:scale-95 cursor-pointer uppercase tracking-wider w-full sm:w-auto"
           >
-            <BookOpen className="w-4 h-4 text-black shrink-0" />
+            <BookOpen className="w-3.5 h-3.5 text-black shrink-0" />
             ทบทวน
           </button>
         </div>
       </header>
 
-      <div className="bg-[#14161A] rounded-2xl border border-[#1F2228] shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-[#1F2228] flex items-center justify-between">
+      <div className="bg-[#14161A] rounded-xl border border-[#1F2228] shadow-sm overflow-hidden">
+        <div className="p-3 sm:p-3.5 border-b border-[#1F2228] flex items-center justify-between">
           <div className="flex items-center gap-2">
             <h3 className="text-xs font-semibold text-[#636A78] uppercase">Recent Activity</h3>
-            <span className="px-2 py-0.5 rounded-full bg-[#1F2228] text-[10px] font-bold text-[#E0E0E0]">
+            <span className="px-1.5 py-0.2 rounded-full bg-[#1F2228] text-[9px] font-bold text-[#E0E0E0]">
               {filteredTrades.length}
             </span>
           </div>
           {filteredTrades.length > 0 && (
-            <span className="text-[11px] text-[#636A78] font-medium">
+            <span className="text-[10px] text-[#636A78] font-medium">
               Showing {(currentPage - 1) * pageSize + 1} - {Math.min(currentPage * pageSize, filteredTrades.length)} of {filteredTrades.length}
             </span>
           )}
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
-            <thead className="bg-[#0A0B0E] text-[#636A78] text-[10px] uppercase tracking-wider">
+            <thead className="bg-[#0A0B0E] text-[#636A78] text-[9px] uppercase tracking-wider">
               <tr>
-                <th className="px-6 py-3 font-medium">Asset</th>
-                <th className="px-6 py-3 font-medium">Setup</th>
-                <th className="px-6 py-3 font-medium">Type</th>
-                <th className="px-6 py-3 font-medium">Qty</th>
-                <th className="px-6 py-3 font-medium">Entry</th>
-                <th className="px-6 py-3 font-medium">Exit</th>
-                <th className="px-6 py-3 font-medium text-right">RR</th>
-                <th className="px-6 py-3 font-medium text-right">Profit/Loss</th>
-                {!readOnly && <th className="px-6 py-3 font-medium text-right">Actions</th>}
+                <th className="px-4 py-2.5 font-medium">Asset</th>
+                <th className="px-4 py-2.5 font-medium">Setup</th>
+                <th className="px-4 py-2.5 font-medium">Type</th>
+                <th className="px-4 py-2.5 font-medium">Qty</th>
+                <th className="px-4 py-2.5 font-medium">Entry</th>
+                <th className="px-4 py-2.5 font-medium">Exit</th>
+                <th className="px-4 py-2.5 font-medium text-right">RR</th>
+                <th className="px-4 py-2.5 font-medium text-right">Profit/Loss</th>
+                {!readOnly && <th className="px-4 py-2.5 font-medium text-right">Actions</th>}
               </tr>
             </thead>
             <tbody className="text-xs text-[#E0E0E0] divide-y divide-[#1F2228]">
               {paginatedTrades.length === 0 ? (
                 <tr>
-                  <td colSpan={readOnly ? 8 : 9} className="px-6 py-12 text-center text-[#636A78] italic">No trades logged yet.</td>
+                  <td colSpan={readOnly ? 8 : 9} className="px-4 py-8 text-center text-[#636A78] italic">No trades logged yet.</td>
                 </tr>
               ) : paginatedTrades.map((trade, idx) => (
                 <tr 
@@ -195,33 +198,33 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
                   className="hover:bg-[#1F2228] transition-colors group cursor-pointer"
                   onClick={() => setSelectedTrade(trade)}
                 >
-                  <td className="px-6 py-3">
-                    <p className="font-bold text-white uppercase">{trade.symbol}</p>
-                    <div className="flex flex-wrap gap-1 mt-1">
+                  <td className="px-4 py-2">
+                    <p className="font-bold text-white uppercase text-xs">{trade.symbol}</p>
+                    <div className="flex flex-wrap gap-1 mt-0.5">
                       {trade.session && (
-                        <span className="px-1.5 py-0.5 rounded bg-[#1F2228] text-[8px] text-[#636A78] font-bold uppercase tracking-tight">
+                        <span className="px-1.5 py-0.2 rounded bg-[#1F2228] text-[8px] text-[#636A78] font-bold uppercase tracking-tight">
                           {trade.session}
                         </span>
                       )}
                       {trade.images && trade.images.length > 0 && (
                         <button 
                           onClick={() => setSelectedImages(trade.images || null)}
-                          className="px-1.5 py-0.5 rounded bg-[#10B981]/10 text-[8px] text-[#10B981] font-bold uppercase tracking-tight flex items-center gap-1 hover:bg-[#10B981]/20 transition-all shadow-sm shadow-[#10B981]/5"
+                          className="px-1.5 py-0.2 rounded bg-[#10B981]/10 text-[8px] text-[#10B981] font-bold uppercase tracking-tight flex items-center gap-1 hover:bg-[#10B981]/20 transition-all shadow-sm shadow-[#10B981]/5"
                         >
                           <ImageIcon className="w-2 h-2" /> {trade.images.length}
                         </button>
                       )}
                     </div>
                   </td>
-                  <td className="px-6 py-3">
-                    <p className="font-medium text-white">{trade.setup || '--'}</p>
+                  <td className="px-4 py-2">
+                    <p className="font-medium text-white text-xs">{trade.setup || '--'}</p>
                     {trade.zone && (
-                      <span className="inline-block mt-1 px-1.5 py-0.5 rounded bg-[#1F2228] text-[8px] text-[#636A78] font-bold uppercase tracking-tight">
+                      <span className="inline-block mt-0.5 px-1.5 py-0.2 rounded bg-[#1F2228] text-[8px] text-[#636A78] font-bold uppercase tracking-tight">
                         {trade.zone}
                       </span>
                     )}
                   </td>
-                  <td className="px-6 py-3">
+                  <td className="px-4 py-2">
                     {trade.type === 'long' ? (
                       <span className="text-[#10B981] font-bold text-xs flex items-center gap-1 uppercase">
                         <ArrowUpRight className="w-3 h-3" /> BUY
@@ -232,45 +235,45 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
                       </span>
                     )}
                   </td>
-                  <td className="px-6 py-3 font-mono text-sm text-white">{trade.quantity}</td>
-                  <td className="px-6 py-3">
+                  <td className="px-4 py-2 font-mono text-xs text-white">{trade.quantity}</td>
+                  <td className="px-4 py-2">
                     <div>
-                      <p className="font-mono text-sm text-white">{formatCurrency(trade.entryPrice)}</p>
-                      <p className="text-[10px] text-[#636A78] font-medium">{format(new Date(trade.entryDate), 'MMM dd, HH:mm')}</p>
+                      <p className="font-mono text-xs text-white">{formatCurrency(trade.entryPrice)}</p>
+                      <p className="text-[9px] text-[#636A78] font-medium">{format(new Date(trade.entryDate), 'MMM dd, HH:mm')}</p>
                     </div>
                   </td>
-                  <td className="px-6 py-3">
+                  <td className="px-4 py-2">
                     {trade.exitPrice ? (
                       <div>
-                        <p className="font-mono text-sm text-white">{formatCurrency(trade.exitPrice)}</p>
-                        <p className="text-[10px] text-[#636A78] font-medium">{trade.exitDate ? format(new Date(trade.exitDate), 'MMM dd, HH:mm') : '--'}</p>
+                        <p className="font-mono text-xs text-white">{formatCurrency(trade.exitPrice)}</p>
+                        <p className="text-[9px] text-[#636A78] font-medium">{trade.exitDate ? format(new Date(trade.exitDate), 'MMM dd, HH:mm') : '--'}</p>
                       </div>
                     ) : (
                       !readOnly ? (
                         closingId === trade.id ? (
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1.5">
                             <input 
                               type="number" 
-                              className="w-20 px-2 py-1 text-[10px] bg-[#0A0B0E] border border-[#1F2228] rounded text-white focus:outline-none focus:border-[#10B981]" 
+                              className="w-16 px-1.5 py-0.5 text-[9px] bg-[#0A0B0E] border border-[#1F2228] rounded text-white focus:outline-none focus:border-[#10B981]" 
                               placeholder="Price"
                               value={exitPrice}
                               onChange={(e) => setExitPrice(e.target.value)}
                             />
-                            <button onClick={() => handleClose(trade.id)} className="text-[10px] font-bold text-[#10B981] hover:underline underline-offset-4">CLOSE</button>
+                            <button onClick={() => handleClose(trade.id)} className="text-[9px] font-bold text-[#10B981] hover:underline underline-offset-4">CLOSE</button>
                           </div>
                         ) : (
-                          <button onClick={() => setClosingId(trade.id)} className="text-[10px] font-bold text-[#10B981] hover:underline underline-offset-4">SET EXIT</button>
+                          <button onClick={() => setClosingId(trade.id)} className="text-[9px] font-bold text-[#10B981] hover:underline underline-offset-4">SET EXIT</button>
                         )
                       ) : (
-                        <span className="text-[#1F2228] font-mono text-sm">--</span>
+                        <span className="text-[#1F2228] font-mono text-xs">--</span>
                       )
                     )}
                   </td>
-                  <td className="px-6 py-3 text-right">
-                    <div className="flex flex-col items-end gap-1">
+                  <td className="px-4 py-2 text-right">
+                    <div className="flex flex-col items-end gap-0.5">
                       {trade.rr != null && (
                         <span className={cn(
-                          "px-2 py-0.5 rounded text-[10px] font-black font-mono",
+                          "px-1.5 py-0.2 rounded text-[9px] font-black font-mono",
                           trade.rr > 0 ? "bg-[#10B981]/10 text-[#10B981]" : trade.rr < 0 ? "bg-rose-500/10 text-rose-500" : "bg-[#636A78]/10 text-[#636A78]"
                         )}>
                           {Number(trade.rr).toFixed(2)}R
@@ -278,40 +281,40 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
                       )}
                     </div>
                   </td>
-                  <td className="px-6 py-3 text-right">
+                  <td className="px-4 py-2 text-right">
                     {trade.pnl !== undefined ? (
                       <span className={cn(
-                        "font-bold text-sm font-mono",
+                        "font-bold text-xs font-mono",
                         trade.pnl > 0 ? "text-[#10B981]" : trade.pnl < 0 ? "text-rose-500" : "text-[#636A78]"
                       )}>
                         {trade.pnl > 0 ? '+' : ''}{formatCurrency(trade.pnl)}
                       </span>
                     ) : (
-                      <span className="text-[#1F2228] font-mono text-sm">--</span>
+                      <span className="text-[#1F2228] font-mono text-xs">--</span>
                     )}
                   </td>
                   {!readOnly && (
-                    <td className="px-6 py-3 text-right whitespace-nowrap">
-                      <div className="flex items-center justify-end gap-2">
+                    <td className="px-4 py-2 text-right whitespace-nowrap">
+                      <div className="flex items-center justify-end gap-1.5">
                         <button 
                           onClick={(e) => {
                             e.stopPropagation();
                             onEdit(trade);
                           }}
-                          className="p-2.5 bg-[#10B981]/10 text-[#10B981] hover:bg-[#10B981]/20 rounded-xl transition-all border border-[#10B981]/20 shadow-sm"
+                          className="p-1.5 bg-[#10B981]/10 text-[#10B981] hover:bg-[#10B981]/20 rounded-lg transition-all border border-[#10B981]/20 shadow-sm"
                           title="Edit trade"
                         >
-                          <Edit2 className="w-3.5 h-3.5" />
+                          <Edit2 className="w-3 h-3" />
                         </button>
                         <button 
                           onClick={(e) => {
                             e.stopPropagation();
                             setDeleteConfirmId(trade.id);
                           }}
-                          className="p-2.5 bg-rose-500/10 text-rose-500 hover:bg-rose-500/20 rounded-xl transition-all border border-rose-500/20 shadow-sm"
+                          className="p-1.5 bg-rose-500/10 text-rose-500 hover:bg-rose-500/20 rounded-lg transition-all border border-rose-500/20 shadow-sm"
                           title="Delete trade"
                         >
-                          <Trash2 className="w-3.5 h-3.5" />
+                          <Trash2 className="w-3 h-3" />
                         </button>
                       </div>
                     </td>

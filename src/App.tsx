@@ -710,176 +710,179 @@ export default function App() {
       <main className={cn(
         "flex-1 mx-auto w-full transition-all duration-300 flex flex-col",
         activeTab === 'tradingview' 
-          ? "p-0 pt-4 pb-16 max-w-none h-screen overflow-hidden" 
-          : "max-w-7xl px-4 pt-10 sm:p-8 md:p-12 pb-28 md:pb-12 md:overflow-y-auto"
+          ? "p-0 pt-2 pb-16 max-w-none h-screen overflow-hidden" 
+          : "max-w-7xl px-3 pt-2.5 sm:px-5 sm:pt-4 md:px-7 md:pt-5 pb-20 md:pb-8 md:overflow-y-auto"
       )}>
         {viewUserId && (
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8 p-4 bg-[#F59E0B]/10 border border-[#F59E0B]/30 rounded-2xl flex items-center justify-between"
+            className="mb-3 p-2.5 bg-[#F59E0B]/10 border border-[#F59E0B]/30 rounded-xl flex items-center justify-between"
           >
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-[#0A0B0E] border border-[#F59E0B]/30 flex items-center justify-center overflow-hidden">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[#0A0B0E] border border-[#F59E0B]/30 flex items-center justify-center overflow-hidden">
                 {viewUserProfile?.avatar ? (
                   <img src={viewUserProfile.avatar} alt="" className="w-full h-full object-cover" />
                 ) : (
-                  <UserIcon className="w-6 h-6 text-[#F59E0B]" />
+                  <UserIcon className="w-3.5 h-3.5 text-[#F59E0B]" />
                 )}
               </div>
               <div>
-                <p className="text-[10px] font-black text-[#F59E0B] uppercase tracking-widest mb-1">Observation Mode</p>
-                <p className="text-lg font-black text-white uppercase tracking-tighter italic">Viewing {viewUserProfile?.name}'s Matrix</p>
+                <p className="text-[8.5px] font-black text-[#F59E0B] uppercase tracking-widest">Observation Mode</p>
+                <p className="text-xs font-black text-white uppercase tracking-tight italic">Viewing {viewUserProfile?.name}'s Matrix</p>
               </div>
             </div>
             <button 
               onClick={handleExitViewMode}
-              className="flex items-center gap-2 px-4 py-2 bg-[#0A0B0E] border border-[#1F2228] rounded-xl text-[10px] font-black text-white uppercase tracking-widest hover:border-[#F59E0B] transition-all"
+              className="flex items-center gap-1.5 px-2.5 py-1 bg-[#0A0B0E] border border-[#1F2228] rounded-lg text-[8.5px] font-black text-white uppercase tracking-widest hover:border-[#F59E0B] transition-all"
             >
-              <ArrowLeft className="w-4 h-4" /> Return to My Matrix
+              <ArrowLeft className="w-3 h-3" /> Return
             </button>
           </motion.div>
         )}
 
         <header className={cn(
-          "flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4",
-          activeTab === 'tradingview' ? "px-4 sm:px-0" : "mb-8 md:mb-12"
+          "flex flex-col gap-2 sm:gap-2.5 mb-3 sm:mb-4",
+          activeTab === 'tradingview' ? "px-3 sm:px-0" : ""
         )}>
-          <div className="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
-            <div className="relative">
-              <button 
-                onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}
-                className="flex items-center gap-3 px-3 py-1.5 bg-[#14161A] rounded-full border border-[#1F2228] w-fit hover:border-[#10B981] transition-all cursor-pointer group shadow-sm"
-              >
-                <div className="w-6 h-6 rounded-full bg-[#10B981]/20 flex items-center justify-center border border-[#10B981]/30 group-hover:bg-[#10B981]/30 group-hover:border-[#10B981]/50 transition-all overflow-hidden shrink-0">
-                  {(userProfile.avatar || user.photoURL) ? (
-                    <img src={userProfile.avatar || user.photoURL || undefined} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                  ) : (
-                    <UserIcon className="w-3.5 h-3.5 text-[#10B981]" />
-                  )}
-                </div>
-                <span className="text-[10px] font-black text-white uppercase tracking-wider truncate max-w-[140px]">
-                  {userProfile.name || user.displayName || user.email?.split('@')[0]}
-                </span>
-                { (userProfile.name || user.displayName || user.email?.split('@')[0] || '').toLowerCase().includes('rapeepat') && (
-                  <div className="w-3.5 h-3.5 rounded-full bg-[#10B981] flex items-center justify-center shrink-0 shadow-[0_0_10px_rgba(16,185,129,0.4)]">
-                    <Star className="w-2 h-2 text-[#0A0B0E] fill-current" />
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+              <div className="relative">
+                <button 
+                  onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}
+                  className="flex items-center gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1 bg-[#14161A] rounded-full border border-[#1F2228] hover:border-[#10B981] transition-all cursor-pointer group shadow-sm shrink-0"
+                >
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#10B981]/20 flex items-center justify-center border border-[#10B981]/30 group-hover:bg-[#10B981]/30 group-hover:border-[#10B981]/50 transition-all overflow-hidden shrink-0">
+                    {(userProfile.avatar || user.photoURL) ? (
+                      <img src={userProfile.avatar || user.photoURL || undefined} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                    ) : (
+                      <UserIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#10B981]" />
+                    )}
                   </div>
-                )}
-              </button>
+                  <span className="text-[9px] sm:text-[10px] font-bold text-white uppercase tracking-wider truncate max-w-[90px] sm:max-w-[130px]">
+                    {userProfile.name || user.displayName || user.email?.split('@')[0]}
+                  </span>
+                  { (userProfile.name || user.displayName || user.email?.split('@')[0] || '').toLowerCase().includes('rapeepat') && (
+                    <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#10B981] flex items-center justify-center shrink-0 shadow-[0_0_8px_rgba(16,185,129,0.4)]">
+                      <Star className="w-1.5 h-1.5 text-[#0A0B0E] fill-current" />
+                    </div>
+                  )}
+                </button>
 
-              <AnimatePresence>
-                {isAccountMenuOpen && (
+                <AnimatePresence>
+                  {isAccountMenuOpen && (
+                    <>
+                      <div className="fixed inset-0 z-40" onClick={() => setIsAccountMenuOpen(false)} />
+                      <motion.div 
+                        initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                        className="absolute left-0 mt-1.5 w-60 bg-[#14161A] border-2 border-[#1F2228] rounded-xl shadow-2xl z-50 overflow-hidden"
+                      >
+                        <div className="p-3 border-b border-[#1F2228] bg-[#1F2228]/30">
+                          <p className="text-[9px] font-black text-[#636A78] uppercase tracking-widest mb-0.5">Authenticated As</p>
+                          <p className="text-xs font-bold text-white truncate">{user.email}</p>
+                        </div>
+                        
+                        <div className="p-1.5 space-y-0.5">
+                          <button 
+                            className="w-full flex items-center gap-2.5 px-2.5 py-2 hover:bg-[#1F2228] rounded-lg text-left transition-colors group"
+                            onClick={() => fileInputRef.current?.click()}
+                          >
+                            <input 
+                              type="file" 
+                              ref={fileInputRef} 
+                              className="hidden" 
+                              accept="image/*" 
+                              onChange={handleProfilePictureUpload}
+                            />
+                            <div className="w-7 h-7 rounded-lg bg-[#3B82F6]/10 flex items-center justify-center border border-[#3B82F6]/20 group-hover:border-[#3B82F6]/50">
+                              <Camera className="w-3.5 h-3.5 text-[#3B82F6]" />
+                            </div>
+                            <div>
+                              <p className="text-xs font-bold text-white uppercase tracking-tight">Profile Avatar</p>
+                              <p className="text-[8px] text-[#636A78] font-bold uppercase tracking-widest">Update Identity</p>
+                            </div>
+                          </button>
+
+                          <button 
+                            className="w-full flex items-center gap-2.5 px-2.5 py-2 hover:bg-[#1F2228] rounded-lg text-left transition-colors group"
+                            onClick={() => setIsMembersListOpen(true)}
+                          >
+                            <div className="w-7 h-7 rounded-lg bg-[#F59E0B]/10 flex items-center justify-center border border-[#F59E0B]/20 group-hover:border-[#F59E0B]/50">
+                              <Users className="w-3.5 h-3.5 text-[#F59E0B]" />
+                            </div>
+                            <div>
+                              <p className="text-xs font-bold text-white uppercase tracking-tight">Member</p>
+                              <p className="text-[8px] text-[#636A78] font-bold uppercase tracking-widest">View All Members</p>
+                            </div>
+                          </button>
+
+                          <div className="h-[1px] bg-[#1F2228] my-1" />
+
+                          <button 
+                            onClick={() => {
+                              setIsAccountMenuOpen(false);
+                              signOut();
+                            }}
+                            className="w-full flex items-center gap-2.5 px-2.5 py-2 hover:bg-rose-500/10 rounded-lg text-left transition-colors group"
+                          >
+                            <div className="w-7 h-7 rounded-lg bg-rose-500/10 flex items-center justify-center border border-rose-500/20 group-hover:border-rose-500/50">
+                              <LogOut className="w-3.5 h-3.5 text-rose-500" />
+                            </div>
+                            <div>
+                              <p className="text-xs font-bold text-rose-500 uppercase tracking-tight">Terminate Session</p>
+                              <p className="text-[8px] text-[#636A78] font-bold uppercase tracking-widest">Log Out</p>
+                            </div>
+                          </button>
+                        </div>
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Light / Dark Mode Toggle Button */}
+              <button 
+                onClick={toggleTheme}
+                aria-label="Toggle Light or Dark Mode"
+                title={theme === 'dark' ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                className="flex items-center gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1 bg-[#14161A] rounded-full border border-[#1F2228] hover:border-[#10B981] text-[#E0E0E0] hover:text-[#10B981] transition-all cursor-pointer shadow-sm active:scale-95 group shrink-0"
+              >
+                {theme === 'dark' ? (
                   <>
-                    <div className="fixed inset-0 z-40" onClick={() => setIsAccountMenuOpen(false)} />
-                    <motion.div 
-                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      className="absolute left-0 mt-2 w-64 bg-[#14161A] border-2 border-[#1F2228] rounded-2xl shadow-2xl z-50 overflow-hidden"
-                    >
-                      <div className="p-4 border-b border-[#1F2228] bg-[#1F2228]/30">
-                        <p className="text-[10px] font-black text-[#636A78] uppercase tracking-widest mb-1">Authenticated As</p>
-                        <p className="text-sm font-bold text-white truncate">{user.email}</p>
-                      </div>
-                      
-                      <div className="p-2">
-                        <button 
-                          className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-[#1F2228] rounded-xl text-left transition-colors group"
-                          onClick={() => fileInputRef.current?.click()}
-                        >
-                          <input 
-                            type="file" 
-                            ref={fileInputRef} 
-                            className="hidden" 
-                            accept="image/*" 
-                            onChange={handleProfilePictureUpload}
-                          />
-                          <div className="w-8 h-8 rounded-lg bg-[#3B82F6]/10 flex items-center justify-center border border-[#3B82F6]/20 group-hover:border-[#3B82F6]/50">
-                            <Camera className="w-4 h-4 text-[#3B82F6]" />
-                          </div>
-                          <div>
-                            <p className="text-xs font-bold text-white uppercase tracking-tighter">Profile Avatar</p>
-                            <p className="text-[9px] text-[#636A78] font-bold uppercase tracking-widest">Update Identity</p>
-                          </div>
-                        </button>
-
-                        <button 
-                          className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-[#1F2228] rounded-xl text-left transition-colors group"
-                          onClick={() => setIsMembersListOpen(true)}
-                        >
-                          <div className="w-8 h-8 rounded-lg bg-[#F59E0B]/10 flex items-center justify-center border border-[#F59E0B]/20 group-hover:border-[#F59E0B]/50">
-                            <Users className="w-4 h-4 text-[#F59E0B]" />
-                          </div>
-                          <div>
-                            <p className="text-xs font-bold text-white uppercase tracking-tighter">Member</p>
-                            <p className="text-[9px] text-[#636A78] font-bold uppercase tracking-widest">View All Members</p>
-                          </div>
-                        </button>
-
-                        <div className="h-[2px] bg-[#1F2228] my-2" />
-
-                        <button 
-                          onClick={() => {
-                            setIsAccountMenuOpen(false);
-                            signOut();
-                          }}
-                          className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-rose-500/10 rounded-xl text-left transition-colors group"
-                        >
-                          <div className="w-8 h-8 rounded-lg bg-rose-500/10 flex items-center justify-center border border-rose-500/20 group-hover:border-rose-500/50">
-                            <LogOut className="w-4 h-4 text-rose-500" />
-                          </div>
-                          <div>
-                            <p className="text-xs font-bold text-rose-500 uppercase tracking-tighter">Terminate Session</p>
-                            <p className="text-[9px] text-[#636A78] font-bold uppercase tracking-widest">Log Out</p>
-                          </div>
-                        </button>
-                      </div>
-                    </motion.div>
+                    <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-amber-400/15 flex items-center justify-center border border-amber-400/30">
+                      <Sun className="w-2 h-2 sm:w-2.5 sm:h-2.5 text-amber-400 group-hover:rotate-45 transition-transform" />
+                    </div>
+                    <span className="text-[8.5px] sm:text-[9px] font-black uppercase tracking-wider text-[#E0E0E0] group-hover:text-white hidden xs:inline">Light Mode</span>
+                  </>
+                ) : (
+                  <>
+                    <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-indigo-500/15 flex items-center justify-center border border-indigo-500/30">
+                      <Moon className="w-2 h-2 sm:w-2.5 sm:h-2.5 text-indigo-500 group-hover:-rotate-12 transition-transform" />
+                    </div>
+                    <span className="text-[8.5px] sm:text-[9px] font-black uppercase tracking-wider text-slate-700 group-hover:text-slate-900 hidden xs:inline">Dark Mode</span>
                   </>
                 )}
-              </AnimatePresence>
+              </button>
             </div>
 
-            {/* Light / Dark Mode Toggle Button */}
-            <button
-              onClick={toggleTheme}
-              aria-label="Toggle Light or Dark Mode"
-              title={theme === 'dark' ? "Switch to Light Mode" : "Switch to Dark Mode"}
-              className="flex items-center gap-2 px-3 py-1.5 bg-[#14161A] rounded-full border border-[#1F2228] hover:border-[#10B981] text-[#E0E0E0] hover:text-[#10B981] transition-all cursor-pointer shadow-sm active:scale-95 group"
-            >
-              {theme === 'dark' ? (
-                <>
-                  <div className="w-5 h-5 rounded-full bg-amber-400/15 flex items-center justify-center border border-amber-400/30">
-                    <Sun className="w-3 h-3 text-amber-400 group-hover:rotate-45 transition-transform" />
-                  </div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-[#E0E0E0] group-hover:text-white">Light Mode</span>
-                </>
-              ) : (
-                <>
-                  <div className="w-5 h-5 rounded-full bg-indigo-500/15 flex items-center justify-center border border-indigo-500/30">
-                    <Moon className="w-3 h-3 text-indigo-500 group-hover:-rotate-12 transition-transform" />
-                  </div>
-                  <span className="text-[10px] font-black uppercase tracking-wider text-slate-700 group-hover:text-slate-900">Dark Mode</span>
-                </>
-              )}
-            </button>
+            {viewUserId && (
+              <div className="flex items-center gap-1.5 px-2.5 py-1 bg-[#F59E0B]/10 border border-[#F59E0B]/30 rounded-lg">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#F59E0B] animate-pulse" />
+                <span className="text-[8.5px] font-black text-[#F59E0B] uppercase tracking-widest">Observation</span>
+              </div>
+            )}
           </div>
           
           {!viewUserId && (
             <button 
               onClick={() => setIsFormOpen(true)}
-              className="flex items-center justify-center gap-1.5 bg-[#10B981] text-[#0A0B0E] px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl shadow-md shadow-[#10B981]/15 hover:opacity-90 active:scale-[0.98] transition-all font-bold text-xs tracking-tight w-full sm:w-auto"
+              className="w-full flex items-center justify-center gap-2 bg-[#10B981] text-[#0A0B0E] py-2.5 sm:py-3 px-4 rounded-xl shadow-md shadow-[#10B981]/15 hover:bg-[#0ea572] active:scale-[0.99] transition-all font-black text-xs sm:text-sm uppercase tracking-wider cursor-pointer"
             >
-              <Plus className="w-3.5 h-3.5" />
+              <Plus className="w-4 h-4 stroke-[3]" />
               <span>LOG NEW TRADE</span>
             </button>
-          )}
-          {viewUserId && (
-            <div className="flex items-center gap-2 px-4 py-2 bg-[#F59E0B]/10 border border-[#F59E0B]/30 rounded-lg">
-              <div className="w-2 h-2 rounded-full bg-[#F59E0B] animate-pulse" />
-              <span className="text-[10px] font-black text-[#F59E0B] uppercase tracking-widest">Observation Mode</span>
-            </div>
           )}
         </header>
 
