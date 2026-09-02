@@ -20,7 +20,11 @@ import {
   FileText, 
   Award,
   BookOpen,
-  AlertTriangle
+  AlertTriangle,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight
 } from 'lucide-react';
 import { db, handleFirestoreError, OperationType, sanitizeData } from '../lib/firebase';
 import { 
@@ -103,6 +107,14 @@ export function Analyst({ setups }: AnalystProps) {
   const [filterSession, setFilterSession] = useState('all');
   const [filterResult, setFilterResult] = useState('all');
   const [filterPosition, setFilterPosition] = useState<'all' | 'buy' | 'sell'>('all');
+
+  // Pagination State (10 items per page)
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchSymbol, filterSetup, filterSession, filterResult, filterPosition]);
 
   const activeSetups = setups && setups.length > 0 ? setups : defaultSetups;
 
@@ -314,7 +326,7 @@ export function Analyst({ setups }: AnalystProps) {
   }).sort((a, b) => b.total - a.total);
 
   // ----------------------------------------------------
-  // Filtering Backtests
+  // Filtering & Pagination Backtests
   // ----------------------------------------------------
   const filteredBacktests = backtests.filter(b => {
     const matchSearch = b.symbol.toLowerCase().includes(searchSymbol.toLowerCase()) || 
@@ -327,6 +339,12 @@ export function Analyst({ setups }: AnalystProps) {
 
     return matchSearch && matchSetup && matchSession && matchResult && matchPosition;
   });
+
+  const totalPages = Math.ceil(filteredBacktests.length / itemsPerPage) || 1;
+  const paginatedBacktests = filteredBacktests.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -1046,6 +1064,11 @@ export function Analyst({ setups }: AnalystProps) {
               <p className="text-[10px] font-black text-[#636A78] uppercase tracking-widest">
                 รายการประวัติการทดสอบ ({filteredBacktests.length} รายการ)
               </p>
+              {totalPages > 1 && (
+                <span className="text-[10px] font-mono text-[#636A78]">
+                  หน้า {currentPage} / {totalPages}
+                </span>
+              )}
             </div>
 
             <AnimatePresence mode="popLayout">
@@ -1056,7 +1079,7 @@ export function Analyst({ setups }: AnalystProps) {
                 </div>
               ) : filteredBacktests.length > 0 ? (
                 <div className="space-y-3.5">
-                  {filteredBacktests.map((b) => {
+                  {paginatedBacktests.map((b) => {
                     const formattedDate = format(new Date(b.dateTime), 'MMM dd, yyyy HH:mm');
                     return (
                       <motion.div
@@ -1196,6 +1219,81 @@ export function Analyst({ setups }: AnalystProps) {
                 </div>
               )}
             </AnimatePresence>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="p-4 rounded-2xl border border-[#1F2228] flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#14161A] mt-4 shadow-sm">
+                <div className="text-xs text-[#636A78] font-medium">
+                  Page <span className="text-white font-bold">{currentPage}</span> of <span className="text-white font-bold">{totalPages}</span> ({filteredBacktests.length} tests)
+                </div>
+                <div className="flex items-center gap-1.5 flex-wrap justify-center">
+                  <button
+                    onClick={() => setCurrentPage(1)}
+                    disabled={currentPage === 1}
+                    className="p-2 rounded-xl bg-[#0A0B0E] border border-[#1F2228] text-[#E0E0E0] hover:text-white hover:bg-[#1F2228] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                    title="First Page"
+                  >
+                    <ChevronsLeft className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#0A0B0E] border border-[#1F2228] text-xs font-bold text-[#E0E0E0] hover:text-white hover:bg-[#1F2228] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    <span>Prev</span>
+                  </button>
+
+                  {/* Page Numbers */}
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1)
+                      .filter(p => {
+                        if (totalPages <= 5) return true;
+                        if (p === 1 || p === totalPages) return true;
+                        return Math.abs(p - currentPage) <= 1;
+                      })
+                      .map((pageNum, idx, arr) => {
+                        const prev = arr[idx - 1];
+                        const showEllipsis = prev && pageNum - prev > 1;
+
+                        return (
+                          <React.Fragment key={pageNum}>
+                            {showEllipsis && <span className="text-xs text-[#636A78] px-1">...</span>}
+                            <button
+                              onClick={() => setCurrentPage(pageNum)}
+                              className={cn(
+                                "w-8 h-8 rounded-xl text-xs font-bold transition-all border",
+                                currentPage === pageNum
+                                  ? "bg-[#10B981] text-black border-[#10B981] shadow-md shadow-[#10B981]/10 font-black"
+                                  : "bg-[#0A0B0E] text-[#636A78] border-[#1F2228] hover:bg-[#1F2228] hover:text-white"
+                              )}
+                            >
+                              {pageNum}
+                            </button>
+                          </React.Fragment>
+                        );
+                      })}
+                  </div>
+
+                  <button
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                    className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#0A0B0E] border border-[#1F2228] text-xs font-bold text-[#E0E0E0] hover:text-white hover:bg-[#1F2228] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                  >
+                    <span>Next</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setCurrentPage(totalPages)}
+                    disabled={currentPage === totalPages}
+                    className="p-2 rounded-xl bg-[#0A0B0E] border border-[#1F2228] text-[#E0E0E0] hover:text-white hover:bg-[#1F2228] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                    title="Last Page"
+                  >
+                    <ChevronsRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
