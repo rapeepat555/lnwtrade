@@ -21,9 +21,55 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
   const [selectedImages, setSelectedImages] = useState<string[] | null>(null);
   const [selectedTrade, setSelectedTrade] = useState<Trade | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
-  const [selectedPortfolioId, setSelectedPortfolioId] = React.useState<string>('all');
-  const [selectedSetup, setSelectedSetup] = React.useState<string>('all');
-  const [selectedPeriod, setSelectedPeriod] = useState<'all' | 'daily' | 'weekly' | 'monthly' | 'yearly'>('all');
+  const [selectedPortfolioId, setSelectedPortfolioId] = React.useState<string>(() => {
+    try {
+      return localStorage.getItem('trade_history_filter_wallet') || 'all';
+    } catch {
+      return 'all';
+    }
+  });
+  const [selectedSetup, setSelectedSetup] = React.useState<string>(() => {
+    try {
+      return localStorage.getItem('trade_history_filter_setup') || 'all';
+    } catch {
+      return 'all';
+    }
+  });
+  const [selectedPeriod, setSelectedPeriod] = useState<'all' | 'daily' | 'weekly' | 'monthly' | 'yearly'>(() => {
+    try {
+      const saved = localStorage.getItem('trade_history_filter_period');
+      if (saved && ['all', 'daily', 'weekly', 'monthly', 'yearly'].includes(saved)) {
+        return saved as any;
+      }
+    } catch {
+      // ignore
+    }
+    return 'all';
+  });
+
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('trade_history_filter_wallet', selectedPortfolioId);
+    } catch (e) {
+      console.warn(e);
+    }
+  }, [selectedPortfolioId]);
+
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('trade_history_filter_setup', selectedSetup);
+    } catch (e) {
+      console.warn(e);
+    }
+  }, [selectedSetup]);
+
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('trade_history_filter_period', selectedPeriod);
+    } catch (e) {
+      console.warn(e);
+    }
+  }, [selectedPeriod]);
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const pageSize = 10;

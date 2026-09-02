@@ -26,9 +26,55 @@ interface DashboardProps {
 }
 
 export function Dashboard({ trades, portfolios, setups, readOnly }: DashboardProps) {
-  const [selectedPortfolioId, setSelectedPortfolioId] = React.useState<string>('all');
-  const [selectedSetup, setSelectedSetup] = React.useState<string>('all');
-  const [selectedTimeRange, setSelectedTimeRange] = React.useState<'1W' | '1M' | '1Y' | 'ALL'>('ALL');
+  const [selectedPortfolioId, setSelectedPortfolioId] = React.useState<string>(() => {
+    try {
+      return localStorage.getItem('dashboard_filter_wallet') || 'all';
+    } catch {
+      return 'all';
+    }
+  });
+  const [selectedSetup, setSelectedSetup] = React.useState<string>(() => {
+    try {
+      return localStorage.getItem('dashboard_filter_setup') || 'all';
+    } catch {
+      return 'all';
+    }
+  });
+  const [selectedTimeRange, setSelectedTimeRange] = React.useState<'1W' | '1M' | '1Y' | 'ALL'>(() => {
+    try {
+      const saved = localStorage.getItem('dashboard_filter_timerange');
+      if (saved && ['1W', '1M', '1Y', 'ALL'].includes(saved)) {
+        return saved as any;
+      }
+    } catch {
+      // ignore
+    }
+    return 'ALL';
+  });
+
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('dashboard_filter_wallet', selectedPortfolioId);
+    } catch (e) {
+      console.warn(e);
+    }
+  }, [selectedPortfolioId]);
+
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('dashboard_filter_setup', selectedSetup);
+    } catch (e) {
+      console.warn(e);
+    }
+  }, [selectedSetup]);
+
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('dashboard_filter_timerange', selectedTimeRange);
+    } catch (e) {
+      console.warn(e);
+    }
+  }, [selectedTimeRange]);
 
   const filteredTrades = React.useMemo(() => {
     return trades.filter(t => {
