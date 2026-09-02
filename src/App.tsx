@@ -699,7 +699,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row bg-[#0A0B0E] min-h-screen md:h-screen font-sans selection:bg-[#10B981]/20 selection:text-white overflow-x-hidden">
+    <div className="flex flex-col md:flex-row bg-[#0A0B0E] min-h-[100dvh] md:h-screen font-sans selection:bg-[#10B981]/20 selection:text-white overflow-x-hidden">
       <Sidebar 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
@@ -711,7 +711,7 @@ export default function App() {
         "flex-1 mx-auto w-full transition-all duration-300 flex flex-col",
         activeTab === 'tradingview' 
           ? "p-0 pt-4 pb-16 max-w-none h-screen overflow-hidden" 
-          : "max-w-7xl px-4 pt-10 sm:p-8 md:p-12 pb-24 md:pb-12 md:overflow-y-auto"
+          : "max-w-7xl px-4 pt-10 sm:p-8 md:p-12 pb-28 md:pb-12 md:overflow-y-auto"
       )}>
         {viewUserId && (
           <motion.div 

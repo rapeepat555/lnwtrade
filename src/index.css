@@ -27,8 +27,8 @@
 @layer base {
   html, body {
     @apply bg-[#0A0B0E] text-[#E0E0E0] antialiased transition-colors duration-200;
-    overscroll-behavior-y: none;
-    touch-action: pan-y;
+    min-height: 100dvh;
+    min-height: -webkit-fill-available;
   }
 
   html.light, body.light {
