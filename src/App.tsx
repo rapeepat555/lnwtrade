@@ -661,6 +661,9 @@ export default function App() {
           <UserProfile 
             profile={viewUserProfile || userProfile} 
             quests={quests} 
+            trades={trades}
+            portfolios={portfolios}
+            setups={setups}
             onCompleteQuest={handleCompleteQuest}
             onUndoQuest={handleUndoQuest}
             onDeleteQuest={handleDeleteQuest}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UserProfile as UserProfileType, Quest } from '../types';
+import { UserProfile as UserProfileType, Quest, Trade, Portfolio } from '../types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, 
@@ -30,6 +30,9 @@ import { compressImage } from '../lib/image';
 interface UserProfileProps {
   profile: UserProfileType;
   quests: Quest[];
+  trades?: Trade[];
+  portfolios?: Portfolio[];
+  setups?: string[];
   onCompleteQuest: (questId: string) => void;
   onUndoQuest: (questId: string) => void;
   onDeleteQuest: (questId: string) => void;
@@ -45,6 +48,9 @@ interface UserProfileProps {
 export function UserProfile({ 
   profile, 
   quests, 
+  trades = [],
+  portfolios = [],
+  setups = [],
   onCompleteQuest, 
   onUndoQuest,
   onDeleteQuest, 
@@ -587,13 +593,38 @@ export function UserProfile({
                           const journalData = localStorage.getItem('tradetrack_pro_data');
                           const profileData = localStorage.getItem('trader_profile');
                           const questsData = localStorage.getItem('trader_quests');
+                          
+                          let finalPortfolios = portfolios;
+                          let finalTrades = trades;
+                          let finalSetups = setups;
+                          
+                          if (journalData) {
+                            try {
+                              const parsedJ = JSON.parse(journalData);
+                              if ((!finalPortfolios || finalPortfolios.length === 0) && Array.isArray(parsedJ.portfolios)) {
+                                finalPortfolios = parsedJ.portfolios;
+                              }
+                              if ((!finalTrades || finalTrades.length === 0) && Array.isArray(parsedJ.trades)) {
+                                finalTrades = parsedJ.trades;
+                              }
+                              if ((!finalSetups || finalSetups.length === 0) && Array.isArray(parsedJ.setups)) {
+                                finalSetups = parsedJ.setups;
+                              }
+                            } catch (e) {}
+                          }
+
                           const exportObj = {
-                            version: 1,
+                            version: 2,
                             exportedAt: new Date().toISOString(),
-                            journal: journalData ? JSON.parse(journalData) : null,
-                            profile: profileData ? JSON.parse(profileData) : null,
-                            quests: questsData ? JSON.parse(questsData) : null
+                            journal: {
+                              portfolios: finalPortfolios,
+                              trades: finalTrades,
+                              setups: finalSetups
+                            },
+                            profile: profile || (profileData ? JSON.parse(profileData) : null),
+                            quests: quests || (questsData ? JSON.parse(questsData) : null)
                           };
+
                           const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj, null, 2));
                           const downloadAnchor = document.createElement('a');
                           downloadAnchor.setAttribute("href", dataStr);
@@ -601,6 +632,8 @@ export function UserProfile({
                           document.body.appendChild(downloadAnchor);
                           downloadAnchor.click();
                           downloadAnchor.remove();
+
+                          alert(`✅ สำรองข้อมูลเรียบร้อย!\n- ประวัติการเทรด: ${finalTrades.length} รายการ\n- กระเป๋าเงิน: ${finalPortfolios.length} บัญชี\nไฟล์กำลังดาวน์โหลด...`);
                         } catch (e) {
                           alert("Export failed: " + e);
                         }
@@ -626,16 +659,31 @@ export function UserProfile({
                             try {
                               const content = event.target?.result as string;
                               const parsed = JSON.parse(content);
+                              let tradeCount = 0;
+                              let walletCount = 0;
+
                               if (parsed.journal) {
                                 localStorage.setItem('tradetrack_pro_data', JSON.stringify(parsed.journal));
+                                tradeCount = parsed.journal.trades?.length || 0;
+                                walletCount = parsed.journal.portfolios?.length || 0;
+                              } else if (parsed.trades || parsed.portfolios) {
+                                localStorage.setItem('tradetrack_pro_data', JSON.stringify({
+                                  trades: parsed.trades || [],
+                                  portfolios: parsed.portfolios || [],
+                                  setups: parsed.setups || ['Breakout', 'Pullback', 'Reversal', 'Scalp', 'Trend Following']
+                                }));
+                                tradeCount = parsed.trades?.length || 0;
+                                walletCount = parsed.portfolios?.length || 0;
                               }
+
                               if (parsed.profile) {
                                 localStorage.setItem('trader_profile', JSON.stringify(parsed.profile));
                               }
                               if (parsed.quests) {
                                 localStorage.setItem('trader_quests', JSON.stringify(parsed.quests));
                               }
-                              alert("Import successful! Reloading data...");
+
+                              alert(`🎉 นำเข้าข้อมูลสำเร็จ!\n- โหลดประวัติการเทรด: ${tradeCount} รายการ\n- โหลดกระเป๋าเงิน: ${walletCount} บัญชี\nกำลังรีโหลดหน้านี้...`);
                               window.location.reload();
                             } catch (err) {
                               alert("Failed to parse JSON file: " + err);

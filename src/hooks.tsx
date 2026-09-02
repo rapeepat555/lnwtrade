@@ -108,7 +108,7 @@ export function useTradingData(user: User | null, targetUserId?: string | null) 
 
     // 1. Portfolios Listener
     const portfoliosRef = collection(db, 'users', effectiveUserId, 'portfolios');
-    const unsubscribePortfolios = onSnapshot(portfoliosRef, (snapshot) => {
+    const unsubscribePortfolios = onSnapshot(portfoliosRef, async (snapshot) => {
       if (!snapshot.empty) {
         setPortfolios(snapshot.docs.map(doc => {
           const data = doc.data() as Portfolio;
@@ -128,6 +128,23 @@ export function useTradingData(user: User | null, targetUserId?: string | null) 
           return { id: doc.id, ...data };
         }));
       } else if (!targetUserId && user) {
+        // If Firestore is empty, check if we have local cached portfolios before resetting to default
+        try {
+          const savedDataRaw = localStorage.getItem(STORAGE_KEY);
+          const savedData = savedDataRaw ? JSON.parse(savedDataRaw) : null;
+          if (savedData && Array.isArray(savedData.portfolios) && savedData.portfolios.length > 0) {
+            setPortfolios(savedData.portfolios);
+            const batch = writeBatch(db);
+            savedData.portfolios.forEach((p: Portfolio) => {
+              batch.set(doc(db, 'users', user.uid, 'portfolios', p.id), sanitizeData(p));
+            });
+            await batch.commit();
+            return;
+          }
+        } catch (e) {
+          console.warn("Offline portfolio restore attempt:", e);
+        }
+
         // Initial setup for new user
         const initialPortfolio: Portfolio = {
           id: 'default',
@@ -157,21 +174,27 @@ export function useTradingData(user: User | null, targetUserId?: string | null) 
     // 2. Trades Listener
     const tradesRef = collection(db, 'users', effectiveUserId, 'trades');
     const unsubscribeTrades = onSnapshot(tradesRef, async (snapshot) => {
-      if (snapshot.empty && !targetUserId && user) {
-        // Check local storage for migration
+      if (snapshot.empty) {
+        // If snapshot is empty, check if we have offline/restored trades in local storage
         try {
           const savedDataRaw = localStorage.getItem(STORAGE_KEY);
           const savedData = savedDataRaw ? JSON.parse(savedDataRaw) : null;
-          if (savedData && savedData.trades && savedData.trades.length > 0) {
-            const batch = writeBatch(db);
-            savedData.trades.forEach((t: Trade) => {
-              batch.set(doc(db, 'users', user.uid, 'trades', t.id), sanitizeData(t));
-            });
-            await batch.commit();
+          if (savedData && Array.isArray(savedData.trades) && savedData.trades.length > 0) {
+            setTrades(savedData.trades);
+            if (!targetUserId && user) {
+              const batch = writeBatch(db);
+              savedData.trades.forEach((t: Trade) => {
+                batch.set(doc(db, 'users', user.uid, 'trades', t.id), sanitizeData(t));
+              });
+              await batch.commit();
+            }
+            return; // Preserve existing local trades!
           }
         } catch (err) {
           console.warn("Migration check skip or failed:", err);
         }
+        setTrades([]);
+        return;
       }
       
       const rawTrades = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Trade));
