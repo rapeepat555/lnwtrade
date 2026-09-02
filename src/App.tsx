@@ -746,25 +746,25 @@ export default function App() {
           activeTab === 'tradingview' ? "px-3 sm:px-0" : ""
         )}>
           <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+            <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
               <div className="relative">
                 <button 
                   onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}
-                  className="flex items-center gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1 bg-[#14161A] rounded-full border border-[#1F2228] hover:border-[#10B981] transition-all cursor-pointer group shadow-sm shrink-0"
+                  className="flex items-center gap-2 px-3 py-1.5 sm:px-3.5 sm:py-2 bg-[#14161A] rounded-full border border-[#1F2228] hover:border-[#10B981] transition-all cursor-pointer group shadow-sm shrink-0 active:scale-95"
                 >
-                  <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#10B981]/20 flex items-center justify-center border border-[#10B981]/30 group-hover:bg-[#10B981]/30 group-hover:border-[#10B981]/50 transition-all overflow-hidden shrink-0">
+                  <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-[#10B981]/20 flex items-center justify-center border border-[#10B981]/30 group-hover:bg-[#10B981]/30 group-hover:border-[#10B981]/50 transition-all overflow-hidden shrink-0">
                     {(userProfile.avatar || user.photoURL) ? (
                       <img src={userProfile.avatar || user.photoURL || undefined} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                     ) : (
-                      <UserIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#10B981]" />
+                      <UserIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#10B981]" />
                     )}
                   </div>
-                  <span className="text-[9px] sm:text-[10px] font-bold text-white uppercase tracking-wider truncate max-w-[90px] sm:max-w-[130px]">
+                  <span className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider truncate max-w-[120px] sm:max-w-[170px]">
                     {userProfile.name || user.displayName || user.email?.split('@')[0]}
                   </span>
                   { (userProfile.name || user.displayName || user.email?.split('@')[0] || '').toLowerCase().includes('rapeepat') && (
-                    <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#10B981] flex items-center justify-center shrink-0 shadow-[0_0_8px_rgba(16,185,129,0.4)]">
-                      <Star className="w-1.5 h-1.5 text-[#0A0B0E] fill-current" />
+                    <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-[#10B981] flex items-center justify-center shrink-0 shadow-[0_0_8px_rgba(16,185,129,0.4)]">
+                      <Star className="w-2 h-2 text-[#0A0B0E] fill-current" />
                     </div>
                   )}
                 </button>
@@ -847,21 +847,21 @@ export default function App() {
                 onClick={toggleTheme}
                 aria-label="Toggle Light or Dark Mode"
                 title={theme === 'dark' ? "Switch to Light Mode" : "Switch to Dark Mode"}
-                className="flex items-center gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1 bg-[#14161A] rounded-full border border-[#1F2228] hover:border-[#10B981] text-[#E0E0E0] hover:text-[#10B981] transition-all cursor-pointer shadow-sm active:scale-95 group shrink-0"
+                className="flex items-center gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 bg-[#14161A] rounded-full border border-[#1F2228] hover:border-[#10B981] text-[#E0E0E0] hover:text-[#10B981] transition-all cursor-pointer shadow-sm active:scale-95 group shrink-0"
               >
                 {theme === 'dark' ? (
                   <>
-                    <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-amber-400/15 flex items-center justify-center border border-amber-400/30">
-                      <Sun className="w-2 h-2 sm:w-2.5 sm:h-2.5 text-amber-400 group-hover:rotate-45 transition-transform" />
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-amber-400/15 flex items-center justify-center border border-amber-400/30">
+                      <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 group-hover:rotate-45 transition-transform" />
                     </div>
-                    <span className="text-[8.5px] sm:text-[9px] font-black uppercase tracking-wider text-[#E0E0E0] group-hover:text-white hidden xs:inline">Light Mode</span>
+                    <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-[#E0E0E0] group-hover:text-white hidden xs:inline">Light Mode</span>
                   </>
                 ) : (
                   <>
-                    <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-indigo-500/15 flex items-center justify-center border border-indigo-500/30">
-                      <Moon className="w-2 h-2 sm:w-2.5 sm:h-2.5 text-indigo-500 group-hover:-rotate-12 transition-transform" />
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-indigo-500/15 flex items-center justify-center border border-indigo-500/30">
+                      <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-indigo-500 group-hover:-rotate-12 transition-transform" />
                     </div>
-                    <span className="text-[8.5px] sm:text-[9px] font-black uppercase tracking-wider text-slate-700 group-hover:text-slate-900 hidden xs:inline">Dark Mode</span>
+                    <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-slate-700 group-hover:text-slate-900 hidden xs:inline">Dark Mode</span>
                   </>
                 )}
               </button>
