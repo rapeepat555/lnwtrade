@@ -34,7 +34,23 @@ export function useTradingData(user: User | null, targetUserId?: string | null) 
   const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
   const [trades, setTrades] = useState<Trade[]>([]);
   const [setups, setSetups] = useState<string[]>(['Breakout', 'Pullback', 'Reversal', 'Scalp', 'Trend Following']);
-  const [activePortfolioId, setActivePortfolioId] = useState<string>('default');
+  const [activePortfolioId, setActivePortfolioId] = useState<string>(() => {
+    try {
+      return localStorage.getItem('last_active_portfolio_id') || 'default';
+    } catch {
+      return 'default';
+    }
+  });
+
+  useEffect(() => {
+    try {
+      if (activePortfolioId) {
+        localStorage.setItem('last_active_portfolio_id', activePortfolioId);
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, [activePortfolioId]);
 
   // Load user-specific cached data when effectiveUserId changes
   useEffect(() => {

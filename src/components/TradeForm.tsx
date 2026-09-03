@@ -35,6 +35,21 @@ export function TradeForm({
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const [isSetupManagerOpen, setIsSetupManagerOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const getRememberedWalletId = () => {
+    try {
+      const saved = localStorage.getItem('trade_form_last_wallet_id');
+      if (saved && portfolios.some(p => p.id === saved)) {
+        return saved;
+      }
+    } catch (e) {
+      // ignore
+    }
+    if (activePortfolioId && portfolios.some(p => p.id === activePortfolioId)) {
+      return activePortfolioId;
+    }
+    return portfolios[0]?.id || 'default';
+  };
+
   const [formData, setFormData] = useState({
     symbol: '',
     type: 'long' as TradeType,
@@ -48,7 +63,7 @@ export function TradeForm({
     zone: '',
     timeframe: 'M5',
     setup: setups[0] || 'Breakout',
-    portfolioId: activePortfolioId,
+    portfolioId: getRememberedWalletId(),
     notes: '',
     images: [] as string[],
     entryDate: formatDateTimeLocal(),
@@ -71,13 +86,14 @@ export function TradeForm({
         zone: editingTrade.zone || '',
         timeframe: editingTrade.timeframe || 'M5',
         setup: editingTrade.setup || setups[0] || 'Breakout',
-        portfolioId: editingTrade.portfolioId || activePortfolioId,
+        portfolioId: editingTrade.portfolioId || getRememberedWalletId(),
         notes: editingTrade.notes || '',
         images: editingTrade.images || [],
         entryDate: editingTrade.entryDate ? formatDateTimeLocal(new Date(editingTrade.entryDate)) : formatDateTimeLocal(),
         exitDate: editingTrade.exitDate ? formatDateTimeLocal(new Date(editingTrade.exitDate)) : ''
       });
     } else {
+      const currentWallet = getRememberedWalletId();
       setFormData({
         symbol: '',
         type: 'long',
@@ -91,14 +107,14 @@ export function TradeForm({
         zone: '',
         timeframe: 'M5',
         setup: setups[0] || 'Breakout',
-        portfolioId: activePortfolioId,
+        portfolioId: currentWallet,
         notes: '',
         images: [],
         entryDate: formatDateTimeLocal(),
         exitDate: ''
       });
     }
-  }, [editingTrade, isOpen, setups, activePortfolioId]);
+  }, [editingTrade, isOpen, setups, activePortfolioId, portfolios]);
 
   // Sync setup if the current one is deleted or setups change
   React.useEffect(() => {
@@ -181,8 +197,12 @@ export function TradeForm({
         portfolioId: formData.portfolioId
       };
       
-      console.log("Submitting trade:", tradeToSubmit);
-      
+      try {
+        localStorage.setItem('trade_form_last_wallet_id', formData.portfolioId);
+      } catch (err) {
+        // ignore
+      }
+
       await onSubmit(tradeToSubmit);
       
       setFormData({
@@ -198,7 +218,7 @@ export function TradeForm({
         zone: '',
         timeframe: 'M5',
         setup: setups[0] || 'Breakout',
-        portfolioId: activePortfolioId,
+        portfolioId: formData.portfolioId,
         notes: '',
         images: [],
         entryDate: formatDateTimeLocal(),
@@ -299,7 +319,15 @@ export function TradeForm({
                             onFocus={handleFocus}
                             className="w-full bg-[#0A0B0E] px-3.5 py-2.5 sm:py-3 rounded-xl border border-[#1F2228] focus:outline-none focus:border-[#10B981] text-xs sm:text-sm font-medium text-white appearance-none disabled:opacity-50"
                             value={formData.portfolioId}
-                            onChange={e => setFormData({ ...formData, portfolioId: e.target.value })}
+                            onChange={e => {
+                              const newWalletId = e.target.value;
+                              setFormData({ ...formData, portfolioId: newWalletId });
+                              try {
+                                localStorage.setItem('trade_form_last_wallet_id', newWalletId);
+                              } catch (err) {
+                                console.warn(err);
+                              }
+                            }}
                           >
                             {portfolios.map(p => (
                               <option key={`form-p-${p.id}`} value={p.id} className="bg-[#14161A]">

@@ -373,33 +373,35 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
 
         {/* Pagination Footer */}
         {totalPages > 1 && (
-          <div className="p-4 border-t border-[#1F2228] flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#14161A]">
-            <div className="text-xs text-[#636A78] font-medium">
-              Page <span className="text-white font-bold">{currentPage}</span> of <span className="text-white font-bold">{totalPages}</span> ({filteredTrades.length} trades)
+          <div className="px-3 py-2.5 sm:px-4 sm:py-3 border-t border-[#1F2228] flex flex-wrap items-center justify-between gap-2 bg-[#14161A]">
+            <div className="text-[11px] sm:text-xs text-[#636A78] font-medium tracking-tight">
+              Page <span className="text-white font-bold">{currentPage}</span> / <span className="text-white font-bold">{totalPages}</span>
+              <span className="hidden xs:inline text-[#636A78]/70 ml-1">({filteredTrades.length} trades)</span>
             </div>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1 sm:gap-1.5 ml-auto">
               <button
                 onClick={() => setCurrentPage(1)}
                 disabled={currentPage === 1}
-                className="p-2 rounded-xl bg-[#0A0B0E] border border-[#1F2228] text-[#E0E0E0] hover:text-white hover:bg-[#1F2228] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                className="hidden sm:flex p-1.5 rounded-lg bg-[#0A0B0E] border border-[#1F2228] text-[#E0E0E0] hover:text-white hover:bg-[#1F2228] disabled:opacity-20 disabled:cursor-not-allowed transition-all"
                 title="First Page"
               >
-                <ChevronsLeft className="w-4 h-4" />
+                <ChevronsLeft className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#0A0B0E] border border-[#1F2228] text-xs font-bold text-[#E0E0E0] hover:text-white hover:bg-[#1F2228] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                className="flex items-center justify-center w-7 h-7 sm:w-auto sm:px-2.5 sm:py-1.5 rounded-lg bg-[#0A0B0E] border border-[#1F2228] text-xs font-bold text-[#E0E0E0] hover:text-white hover:bg-[#1F2228] disabled:opacity-20 disabled:cursor-not-allowed transition-all"
+                title="Previous Page"
               >
-                <ChevronLeft className="w-4 h-4" />
-                <span>Prev</span>
+                <ChevronLeft className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline ml-0.5 text-[11px]">Prev</span>
               </button>
 
               {/* Page Number Buttons */}
               <div className="flex items-center gap-1">
                 {Array.from({ length: totalPages }, (_, i) => i + 1)
                   .filter(pageNum => {
-                    if (totalPages <= 5) return true;
+                    if (totalPages <= 4) return true;
                     if (pageNum === 1 || pageNum === totalPages) return true;
                     return Math.abs(pageNum - currentPage) <= 1;
                   })
@@ -408,13 +410,13 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
                     const showEllipsis = prevNum && pageNum - prevNum > 1;
                     return (
                       <React.Fragment key={`page-${pageNum}`}>
-                        {showEllipsis && <span className="px-1 text-xs text-[#636A78]">...</span>}
+                        {showEllipsis && <span className="px-0.5 text-[10px] text-[#636A78]">...</span>}
                         <button
                           onClick={() => setCurrentPage(pageNum)}
                           className={cn(
-                            "w-8 h-8 rounded-xl text-xs font-bold transition-all border",
+                            "w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-[11px] sm:text-xs font-bold transition-all border",
                             currentPage === pageNum
-                              ? "bg-[#10B981] text-black border-[#10B981] shadow-md shadow-[#10B981]/10 font-black"
+                              ? "bg-[#10B981] text-black border-[#10B981] shadow-sm font-black"
                               : "bg-[#0A0B0E] text-[#636A78] border-[#1F2228] hover:bg-[#1F2228] hover:text-white"
                           )}
                         >
@@ -428,18 +430,19 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
               <button
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#0A0B0E] border border-[#1F2228] text-xs font-bold text-[#E0E0E0] hover:text-white hover:bg-[#1F2228] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                className="flex items-center justify-center w-7 h-7 sm:w-auto sm:px-2.5 sm:py-1.5 rounded-lg bg-[#0A0B0E] border border-[#1F2228] text-xs font-bold text-[#E0E0E0] hover:text-white hover:bg-[#1F2228] disabled:opacity-20 disabled:cursor-not-allowed transition-all"
+                title="Next Page"
               >
-                <span>Next</span>
-                <ChevronRight className="w-4 h-4" />
+                <span className="hidden sm:inline mr-0.5 text-[11px]">Next</span>
+                <ChevronRight className="w-3.5 h-3.5" />
               </button>
               <button
                 onClick={() => setCurrentPage(totalPages)}
                 disabled={currentPage === totalPages}
-                className="p-2 rounded-xl bg-[#0A0B0E] border border-[#1F2228] text-[#E0E0E0] hover:text-white hover:bg-[#1F2228] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                className="hidden sm:flex p-1.5 rounded-lg bg-[#0A0B0E] border border-[#1F2228] text-[#E0E0E0] hover:text-white hover:bg-[#1F2228] disabled:opacity-20 disabled:cursor-not-allowed transition-all"
                 title="Last Page"
               >
-                <ChevronsRight className="w-4 h-4" />
+                <ChevronsRight className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
