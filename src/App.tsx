@@ -38,7 +38,7 @@ import { MembersList } from './components/MembersList';
 
 const INITIAL_PROFILE: UserProfileType = {
   id: 'user-1',
-  name: 'Trader Hero',
+  name: 'Trader',
   level: 4,
   exp: 0,
   statPoints: 0,
@@ -737,10 +737,10 @@ export default function App() {
                       <UserIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#10B981]" />
                     )}
                   </div>
-                  <span className="text-xs sm:text-sm font-bold text-white uppercase tracking-wider truncate max-w-[120px] sm:max-w-[170px]">
-                    {userProfile.name || user.displayName || user.email?.split('@')[0]}
+                  <span className="text-xs sm:text-sm font-bold text-white truncate max-w-[140px] xs:max-w-[170px] sm:max-w-[220px]" title={user.email || undefined}>
+                    {user.email || user.displayName || userProfile.name || 'Trader'}
                   </span>
-                  { (userProfile.name || user.displayName || user.email?.split('@')[0] || '').toLowerCase().includes('rapeepat') && (
+                  { ((user.email || userProfile.name || '').toLowerCase().includes('rapeepat') || (user.email || '').toLowerCase().includes('rapeedat')) && (
                     <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-[#10B981] flex items-center justify-center shrink-0 shadow-[0_0_8px_rgba(16,185,129,0.4)]">
                       <Star className="w-2 h-2 text-[#0A0B0E] fill-current" />
                     </div>

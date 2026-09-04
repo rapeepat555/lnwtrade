@@ -333,7 +333,7 @@ export function UserProfile({
                   >
                     {profile.name}
                   </h1>
-                  { profile.name.toLowerCase().includes('rapeepat') && (
+                  { (profile.name.toLowerCase().includes('rapeepat') || profile.name.toLowerCase().includes('rapeedat')) && (
                     <div className="w-4 h-4 rounded-full bg-[#10B981] flex items-center justify-center shrink-0 shadow-[0_0_10px_rgba(16,185,129,0.5)]">
                       <Star className="w-2.5 h-2.5 text-[#0A0B0E] fill-current" />
                     </div>

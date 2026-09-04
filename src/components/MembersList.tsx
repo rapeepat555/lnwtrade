@@ -82,7 +82,7 @@ export function MembersList({ onSelectMember, onClose }: MembersListProps) {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <p className="text-sm font-bold text-white truncate">{member.profile.name}</p>
-                    {member.profile.name.toLowerCase().includes('rapeepat') && (
+                    {(member.profile.name.toLowerCase().includes('rapeepat') || member.profile.name.toLowerCase().includes('rapeedat')) && (
                       <div className="w-3 h-3 rounded-full bg-[#10B981] flex items-center justify-center shrink-0 shadow-[0_0_8px_rgba(16,185,129,0.4)]">
                         <Star className="w-1.5 h-1.5 text-[#0A0B0E] fill-current" />
                       </div>
