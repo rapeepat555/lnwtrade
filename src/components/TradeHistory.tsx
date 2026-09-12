@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Trade, Portfolio } from '../types';
 import { formatCurrency, cn } from '../lib/utils';
-import { CheckCircle2, Clock, Trash2, ArrowUpRight, ArrowDownRight, Image as ImageIcon, Edit2, AlertTriangle, X, Briefcase, LayoutGrid, Calendar, Sparkles, TrendingUp, TrendingDown, Percent, Award, Activity, FileText, PieChart, BookOpen, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronDown } from 'lucide-react';
+import { CheckCircle2, Clock, Trash2, ArrowUpRight, ArrowDownRight, Image as ImageIcon, Edit2, AlertTriangle, X, Briefcase, LayoutGrid, Calendar, Sparkles, TrendingUp, TrendingDown, Percent, Award, Activity, FileText, PieChart, BookOpen, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronDown, ZoomIn, ZoomOut, Download, Eye } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -19,6 +19,8 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
   const [closingId, setClosingId] = useState<string | null>(null);
   const [exitPrice, setExitPrice] = useState<string>('');
   const [selectedImages, setSelectedImages] = useState<string[] | null>(null);
+  const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
+  const [isZoomed, setIsZoomed] = useState<boolean>(false);
   const [selectedTrade, setSelectedTrade] = useState<Trade | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [selectedPortfolioId, setSelectedPortfolioId] = React.useState<string>(() => {
@@ -28,6 +30,27 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
       return 'all';
     }
   });
+
+  useEffect(() => {
+    if (!selectedImages || selectedImages.length === 0) {
+      setIsZoomed(false);
+      return;
+    }
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSelectedImages(null);
+        setIsZoomed(false);
+      } else if (e.key === 'ArrowLeft') {
+        setActiveImageIndex(prev => (prev > 0 ? prev - 1 : selectedImages.length - 1));
+        setIsZoomed(false);
+      } else if (e.key === 'ArrowRight') {
+        setActiveImageIndex(prev => (prev < selectedImages.length - 1 ? prev + 1 : 0));
+        setIsZoomed(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedImages]);
   const [selectedSetup, setSelectedSetup] = React.useState<string>(() => {
     try {
       return localStorage.getItem('trade_history_filter_setup') || 'all';
@@ -254,8 +277,13 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
                       )}
                       {trade.images && trade.images.length > 0 && (
                         <button 
-                          onClick={() => setSelectedImages(trade.images || null)}
-                          className="px-1.5 py-0.2 rounded bg-[#10B981]/10 text-[8px] text-[#10B981] font-bold uppercase tracking-tight flex items-center gap-1 hover:bg-[#10B981]/20 transition-all shadow-sm shadow-[#10B981]/5"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedImages(trade.images || null);
+                            setActiveImageIndex(0);
+                            setIsZoomed(false);
+                          }}
+                          className="px-1.5 py-0.2 rounded bg-[#10B981]/10 text-[8px] text-[#10B981] font-bold uppercase tracking-tight flex items-center gap-1 hover:bg-[#10B981]/20 transition-all shadow-sm shadow-[#10B981]/5 cursor-pointer"
                         >
                           <ImageIcon className="w-2 h-2" /> {trade.images.length}
                         </button>
@@ -656,20 +684,25 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
                 {selectedTrade.images && selectedTrade.images.length > 0 && (
                   <div className="space-y-4">
                     <h4 className="text-[10px] font-bold text-[#636A78] uppercase tracking-[0.2em]">Visual Evidence ({selectedTrade.images.length})</h4>
-                    <div className="grid grid-cols-1 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {selectedTrade.images.map((img, i) => (
-                        <div key={selectedTrade.id ? `evidence-img-${selectedTrade.id}-${i}` : `evidence-img-idx-${i}`} className="rounded-2xl overflow-hidden border border-[#1F2228] group/img relative shadow-xl">
-                          <img src={img} alt={`Trade Evidence ${i + 1}`} className="w-full h-auto" />
-                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
-                             <button 
-                               onClick={(e) => {
-                                 e.stopPropagation();
-                                 window.open(img, '_blank');
-                               }}
-                               className="px-4 py-2 bg-white text-black font-bold text-xs rounded-xl shadow-lg transform translate-y-4 group-hover/img:translate-y-0 transition-transform"
-                             >
-                               VIEW FULL SIZE
-                             </button>
+                        <div 
+                          key={selectedTrade.id ? `evidence-img-${selectedTrade.id}-${i}` : `evidence-img-idx-${i}`} 
+                          className="rounded-2xl overflow-hidden border border-[#1F2228] hover:border-[#10B981]/50 group/img relative shadow-xl cursor-pointer aspect-video bg-[#0A0B0E] flex items-center justify-center transition-all"
+                          onClick={() => {
+                            setSelectedImages(selectedTrade.images);
+                            setActiveImageIndex(i);
+                            setIsZoomed(false);
+                          }}
+                        >
+                          <img src={img} alt={`Trade Evidence ${i + 1}`} className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-300" referrerPolicy="no-referrer" />
+                          <div className="absolute inset-0 bg-black/40 sm:bg-black/60 sm:opacity-0 sm:group-hover/img:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                             <span className="px-3.5 py-1.5 bg-[#10B981] text-black font-black text-xs rounded-xl shadow-lg flex items-center gap-1.5">
+                               <Eye className="w-3.5 h-3.5" /> แตะเพื่อดูรูปขยาย
+                             </span>
+                          </div>
+                          <div className="absolute bottom-2.5 right-2.5 bg-black/80 px-2 py-0.5 rounded-lg text-[10px] text-white font-bold border border-[#1F2228] pointer-events-none">
+                            #{i + 1}
                           </div>
                         </div>
                       ))}
@@ -700,41 +733,6 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
                   </button>
                 </div>
               )}
-            </motion.div>
-          </div>
-        )}
-
-        {selectedImages && (
-          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedImages(null)}
-              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="relative w-full max-w-4xl max-h-[80vh] overflow-y-auto bg-[#14161A] rounded-2xl p-6 border border-[#1F2228] flex flex-col gap-4"
-            >
-              <div className="flex items-center justify-between">
-                <h3 className="text-xl font-bold text-white">Chart Screenshots</h3>
-                <button 
-                  onClick={() => setSelectedImages(null)}
-                  className="p-2 hover:bg-[#1F2228] rounded-full text-[#636A78]"
-                >
-                  <ArrowUpRight className="w-5 h-5 rotate-45" />
-                </button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {selectedImages.map((img, i) => (
-                  <div key={`screenshot-${i}`} className="rounded-xl overflow-hidden border border-[#1F2228]">
-                    <img src={img} alt={`Chart ${i + 1}`} className="w-full h-auto" />
-                  </div>
-                ))}
-              </div>
             </motion.div>
           </div>
         )}
@@ -973,8 +971,12 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
                                 {t.images.map((img, i) => (
                                   <div 
                                     key={t.id ? `review-img-${t.id}-${i}` : `review-img-idx-${index}-${i}`}
-                                    className="rounded-2xl overflow-hidden border border-[#1F2228] hover:border-[#2a2e37] group/img relative shadow-md bg-[#14161A] aspect-video flex items-center justify-center cursor-zoom-in transition-all duration-300"
-                                    onClick={() => setSelectedImages([img])}
+                                    className="rounded-2xl overflow-hidden border border-[#1F2228] hover:border-[#10B981]/50 group/img relative shadow-md bg-[#14161A] aspect-video flex items-center justify-center cursor-pointer transition-all duration-300 active:scale-[0.98]"
+                                    onClick={() => {
+                                      setSelectedImages(t.images);
+                                      setActiveImageIndex(i);
+                                      setIsZoomed(false);
+                                    }}
                                   >
                                     <img 
                                       src={img} 
@@ -982,12 +984,12 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
                                       className="w-full h-full object-cover group-hover/img:scale-[1.03] transition-transform duration-300"
                                       referrerPolicy="no-referrer"
                                     />
-                                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/img:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
-                                      <span className="px-4 py-2 bg-[#10B981] text-black font-black text-xs rounded-xl shadow-lg tracking-wider uppercase shadow-md shadow-[#10B981]/20 transform translate-y-2 group-hover/img:translate-y-0 transition-transform">
-                                        คลิกเพื่อดูรูปภาพขนาดเต็ม
+                                    <div className="absolute inset-0 bg-black/35 sm:bg-black/60 sm:opacity-0 sm:group-hover/img:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 pointer-events-none">
+                                      <span className="px-3.5 py-1.5 bg-[#10B981] text-black font-black text-xs rounded-xl shadow-lg tracking-wider uppercase shadow-[#10B981]/20 flex items-center gap-1.5">
+                                        <Eye className="w-3.5 h-3.5" /> แตะเพื่อดูรูปขยาย
                                       </span>
                                     </div>
-                                    <div className="absolute bottom-3 right-3 bg-black/85 px-2.5 py-1 rounded-xl text-[10px] text-white font-bold border border-[#1F2228]">
+                                    <div className="absolute bottom-3 right-3 bg-black/85 px-2.5 py-1 rounded-xl text-[10px] text-white font-bold border border-[#1F2228] pointer-events-none">
                                       รูปภาพหลักฐานอ้างอิง #{i + 1}
                                     </div>
                                   </div>
@@ -1011,6 +1013,169 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
                   เรียบร้อย
                 </button>
               </div>
+            </motion.div>
+          </div>
+        )}
+
+        {/* Fullscreen Dedicated Image Lightbox (z-600 to float above all modals) */}
+        {selectedImages && selectedImages.length > 0 && (
+          <div className="fixed inset-0 z-[600] flex flex-col items-center justify-center p-2 sm:p-4 select-none">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => {
+                setSelectedImages(null);
+                setIsZoomed(false);
+              }}
+              className="absolute inset-0 bg-black/95 backdrop-blur-md cursor-pointer"
+            />
+
+            {/* Lightbox Modal Box */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative z-10 w-full max-w-5xl h-full max-h-[96vh] flex flex-col justify-between"
+            >
+              {/* Header Controls */}
+              <div className="flex items-center justify-between px-3 py-2 sm:px-4 sm:py-3 bg-[#14161A]/95 rounded-2xl border border-[#1F2228] backdrop-blur-md mb-2 shadow-2xl shrink-0">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-[#10B981]/15 text-[#10B981] flex items-center justify-center border border-[#10B981]/20">
+                    <ImageIcon className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold text-white leading-tight flex items-center gap-2">
+                      <span>รูปภาพหลักฐานกราฟ (Chart Evidence)</span>
+                    </h4>
+                    {selectedImages.length > 1 && (
+                      <p className="text-[10px] sm:text-xs text-[#10B981] font-mono font-bold mt-0.5">
+                        รูปที่ {activeImageIndex + 1} จาก {selectedImages.length}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  {/* Zoom Toggle */}
+                  <button
+                    onClick={() => setIsZoomed(!isZoomed)}
+                    className={cn(
+                      "p-2 rounded-xl text-xs font-bold transition-all border flex items-center gap-1 cursor-pointer",
+                      isZoomed 
+                        ? "bg-[#10B981] text-black border-[#10B981] shadow-md shadow-[#10B981]/20" 
+                        : "bg-[#0A0B0E] text-[#E0E0E0] border-[#1F2228] hover:bg-[#1F2228] hover:text-white"
+                    )}
+                    title={isZoomed ? "ย่อขนาดรูป (Zoom Out)" : "ขยายรูป (Zoom In)"}
+                  >
+                    {isZoomed ? <ZoomOut className="w-4 h-4" /> : <ZoomIn className="w-4 h-4" />}
+                    <span className="hidden xs:inline text-[11px]">{isZoomed ? 'ย่อรูป' : 'ซูม'}</span>
+                  </button>
+
+                  {/* Open Original / Download */}
+                  <a
+                    href={selectedImages[activeImageIndex]}
+                    download={`chart-evidence-${activeImageIndex + 1}.png`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-2 rounded-xl bg-[#0A0B0E] border border-[#1F2228] text-[#E0E0E0] hover:text-white hover:bg-[#1F2228] transition-all cursor-pointer flex items-center gap-1"
+                    title="ดาวน์โหลดหรือเปิดภาพต้นฉบับ"
+                  >
+                    <Download className="w-4 h-4" />
+                  </a>
+
+                  {/* Close Button */}
+                  <button
+                    onClick={() => {
+                      setSelectedImages(null);
+                      setIsZoomed(false);
+                    }}
+                    className="p-2 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 hover:bg-rose-500 hover:text-white transition-all cursor-pointer ml-1"
+                    title="ปิดหน้าต่าง (Esc)"
+                  >
+                    <X className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Main Image View Area */}
+              <div className="relative flex-1 flex items-center justify-center overflow-hidden rounded-2xl bg-[#07080a] border border-[#1F2228]/80 p-2 sm:p-4 shadow-2xl min-h-0">
+                {/* Prev Navigation */}
+                {selectedImages.length > 1 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveImageIndex(prev => (prev > 0 ? prev - 1 : selectedImages.length - 1));
+                      setIsZoomed(false);
+                    }}
+                    className="absolute left-2 sm:left-4 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/85 hover:bg-[#10B981] hover:text-black text-white flex items-center justify-center border border-white/10 hover:border-[#10B981] shadow-2xl transition-all active:scale-90 cursor-pointer"
+                    title="รูปก่อนหน้า (ลูกศรซ้าย)"
+                  >
+                    <ChevronLeft className="w-6 h-6 sm:w-7 sm:h-7" />
+                  </button>
+                )}
+
+                {/* Display Image with Pan/Zoom */}
+                <div className={cn(
+                  "w-full h-full flex items-center justify-center overflow-auto custom-scrollbar",
+                  isZoomed ? "cursor-grab" : "cursor-zoom-in"
+                )}>
+                  <img
+                    src={selectedImages[activeImageIndex]}
+                    alt={`Evidence ${activeImageIndex + 1}`}
+                    onClick={() => setIsZoomed(!isZoomed)}
+                    className={cn(
+                      "transition-transform duration-200 object-contain select-none",
+                      isZoomed 
+                        ? "max-w-none w-auto h-auto scale-150 sm:scale-[2] my-auto shadow-2xl" 
+                        : "max-h-[68vh] sm:max-h-[75vh] max-w-full rounded-xl shadow-2xl border border-[#1F2228]/60"
+                    )}
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+
+                {/* Next Navigation */}
+                {selectedImages.length > 1 && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveImageIndex(prev => (prev < selectedImages.length - 1 ? prev + 1 : 0));
+                      setIsZoomed(false);
+                    }}
+                    className="absolute right-2 sm:right-4 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/85 hover:bg-[#10B981] hover:text-black text-white flex items-center justify-center border border-white/10 hover:border-[#10B981] shadow-2xl transition-all active:scale-90 cursor-pointer"
+                    title="รูปถัดไป (ลูกศรขวา)"
+                  >
+                    <ChevronRight className="w-6 h-6 sm:w-7 sm:h-7" />
+                  </button>
+                )}
+              </div>
+
+              {/* Bottom Thumbnail Strip (if multiple images) */}
+              {selectedImages.length > 1 && (
+                <div className="mt-2 py-2 px-3 bg-[#14161A]/95 rounded-2xl border border-[#1F2228] backdrop-blur-md flex items-center justify-center gap-2 overflow-x-auto no-scrollbar shadow-2xl shrink-0">
+                  {selectedImages.map((thumb, idx) => (
+                    <button
+                      key={`lightbox-thumb-${idx}`}
+                      onClick={() => {
+                        setActiveImageIndex(idx);
+                        setIsZoomed(false);
+                      }}
+                      className={cn(
+                        "relative w-14 h-10 sm:w-16 sm:h-12 rounded-xl overflow-hidden border-2 transition-all shrink-0 cursor-pointer",
+                        activeImageIndex === idx
+                          ? "border-[#10B981] scale-105 shadow-lg shadow-[#10B981]/30"
+                          : "border-[#1F2228] opacity-60 hover:opacity-100"
+                      )}
+                    >
+                      <img src={thumb} alt={`Thumb ${idx + 1}`} className="w-full h-full object-cover" />
+                      <span className="absolute bottom-0.5 right-0.5 bg-black/90 px-1 py-0.2 rounded text-[8px] text-white font-bold">
+                        #{idx + 1}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
             </motion.div>
           </div>
         )}
