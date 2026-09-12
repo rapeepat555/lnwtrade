@@ -470,7 +470,7 @@ export function Dashboard({ trades, portfolios, setups, readOnly }: DashboardPro
                   stroke="none"
                 >
                   {winLossData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell key={`dash-winloss-cell-${entry.name || index}-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip 

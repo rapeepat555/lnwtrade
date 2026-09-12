@@ -418,10 +418,10 @@ export function UserProfile({
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
-                  {Object.entries(profile.skills).map(([key, value]) => {
+                  {Object.entries(profile.skills).map(([key, value], skIdx) => {
                     const Icon = (skillIcons as any)[key] || Target;
                     return (
-                      <div key={key} className="space-y-2 group">
+                      <div key={`skill-${key}-${skIdx}`} className="space-y-2 group">
                         <div className="flex justify-between items-end">
                           <div className="flex items-center gap-2.5">
                             <div className="w-8 h-8 rounded-lg bg-[#0A0B0E] border border-[#1F2228] flex items-center justify-center text-[#10B981] group-hover:scale-105 transition-transform shrink-0">
@@ -456,6 +456,7 @@ export function UserProfile({
                       <AnimatePresence>
                         {confirmDeleteHistoryId === q.id && (
                           <motion.div 
+                            key={`confirm-del-history-${q.id}`}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
@@ -539,12 +540,12 @@ export function UserProfile({
                         { name: 'Diamond I', range: 'Lv. 60 - 79', exp: '60,000 - 79,000 EXP' },
                         { name: 'Supreme', range: 'Lv. 80 - 99', exp: '80,000 - 99,000 EXP' },
                         { name: 'Legendary', range: 'Lv. 100+', exp: '100,000+ EXP' },
-                      ].map((item) => {
+                      ].map((item, rIdx) => {
                         const isCurrentRank = profile.rank === item.name;
                         const rankStyle = getRankConfig(item.name);
                         return (
                           <tr 
-                            key={item.name} 
+                            key={`rank-${item.name}-${rIdx}`} 
                             className={cn(
                               "transition-all duration-300",
                               isCurrentRank 
@@ -743,7 +744,7 @@ export function UserProfile({
                 <div className="flex gap-1 bg-[#14161A] p-0.5 rounded-lg border border-[#1F2228]">
                   {['all', 'main', 'sub', 'daily'].map((filter) => (
                     <button
-                      key={filter}
+                      key={`quest-filter-${filter}`}
                       onClick={() => setQuestFilter(filter as any)}
                       className={cn(
                         "px-2.5 py-1 rounded-md text-[8.5px] font-black uppercase tracking-wider transition-all",
@@ -789,6 +790,7 @@ export function UserProfile({
                     <AnimatePresence>
                       {confirmDeleteId === quest.id && (
                         <motion.div 
+                          key={`confirm-del-quest-${quest.id}`}
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
@@ -875,7 +877,7 @@ export function UserProfile({
                             {(quest.rewardStats || quest.rewardStat) && (
                               <div className="flex flex-wrap gap-x-2 gap-y-0.5 mt-0.5">
                                 {(quest.rewardStats || [quest.rewardStat!]).filter(Boolean).map((stat, idx) => (
-                                  <div key={idx} className="flex items-center gap-0.5">
+                                  <div key={`reward-stat-${stat}-${idx}`} className="flex items-center gap-0.5">
                                     <Plus className="w-2 h-2 text-blue-400" />
                                     <span className="text-[8px] font-mono text-blue-400 uppercase">
                                       {quest.rewardStatValue} {skillNames[stat as keyof typeof skillNames]}
@@ -982,7 +984,7 @@ export function UserProfile({
 
       <AnimatePresence>
         {isAddingQuest && (
-          <div className="fixed inset-0 z-50 flex flex-col items-center justify-start sm:justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
+          <div key="modal-add-quest" className="fixed inset-0 z-50 flex flex-col items-center justify-start sm:justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
             <motion.div 
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -1073,11 +1075,11 @@ export function UserProfile({
                   <div className="space-y-1">
                     <label className="text-[9px] font-black text-[#636A78] uppercase tracking-wider px-1 block">Ability Reward (Select Multiple)</label>
                     <div className="grid grid-cols-2 gap-1.5">
-                      {Object.keys(profile.skills).map(key => {
+                      {Object.keys(profile.skills).map((key, kIdx) => {
                         const isSelected = newQuest.rewardStats.includes(key);
                         return (
                           <button
-                            key={key}
+                            key={`ability-reward-${key}-${kIdx}`}
                             type="button"
                             onClick={() => {
                               setNewQuest(prev => ({

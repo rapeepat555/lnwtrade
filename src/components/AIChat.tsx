@@ -449,7 +449,7 @@ export function AIChat({
       >
         {messages.map((m, i) => (
           <motion.div
-            key={m.id ? `chat-msg-${m.id}` : `chat-msg-idx-${i}`}
+            key={m.id ? `chat-msg-${m.id}-${i}` : `chat-msg-idx-${i}`}
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             className={cn(
@@ -630,7 +630,7 @@ export function AIChat({
                                   value={diagnostics[m.id]?.session || 'London'}
                                   onChange={(e) => updateDiagnostic(m.id, 'session', e.target.value)}
                                 >
-                                  {SESSIONS.map(s => <option key={s} value={s}>{s}</option>)}
+                                  {SESSIONS.map((s, si) => <option key={`diag-sess-${s}-${si}`} value={s}>{s}</option>)}
                                 </select>
                               </div>
                               <div className="space-y-1">
@@ -641,9 +641,9 @@ export function AIChat({
                                   onChange={(e) => updateDiagnostic(m.id, 'setup', e.target.value)}
                                 >
                                   {setups && setups.length > 0 ? (
-                                    setups.map((s, si) => <option key={si} value={s}>{s}</option>)
+                                    setups.map((s, si) => <option key={`diag-setup-${s}-${si}`} value={s}>{s}</option>)
                                   ) : (
-                                    SETUPS.map((s, si) => <option key={`${s}-${si}`} value={s}>{s}</option>)
+                                    SETUPS.map((s, si) => <option key={`diag-default-setup-${s}-${si}`} value={s}>{s}</option>)
                                   )}
                                 </select>
                               </div>
@@ -656,8 +656,8 @@ export function AIChat({
                                 value={diagnostics[m.id]?.zone || ''}
                                 onChange={(e) => updateDiagnostic(m.id, 'zone', e.target.value)}
                               >
-                                <option value="">-- No Zone --</option>
-                                {ZONES.map(z => <option key={z} value={z}>{z}</option>)}
+                                <option key="diag-zone-none" value="">-- No Zone --</option>
+                                {ZONES.map((z, zi) => <option key={`diag-zone-${z}-${zi}`} value={z}>{z}</option>)}
                               </select>
                             </div>
 
@@ -790,6 +790,7 @@ export function AIChat({
         <AnimatePresence>
           {pendingImage && (
             <motion.div
+              key="chat-pending-image-preview"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}

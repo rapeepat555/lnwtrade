@@ -172,8 +172,8 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
               className="bg-transparent text-xs font-bold text-[#E0E0E0] outline-none cursor-pointer pr-5 w-full truncate appearance-none"
             >
               <option key="portfolio-all" value="all" className="bg-[#14161A]">ทั้งหมด (Wallet)</option>
-              {portfolios.map(p => (
-                <option key={`portfolio-${p.id}`} value={p.id} className="bg-[#14161A] text-white">
+              {portfolios.map((p, pIdx) => (
+                <option key={`portfolio-${p.id || 'p'}-${pIdx}`} value={p.id} className="bg-[#14161A] text-white">
                   {p.name}{p.isArchived ? ' (จัดเก็บแล้ว)' : ''}
                 </option>
               ))}
@@ -437,7 +437,7 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
                     const prevNum = arr[idx - 1];
                     const showEllipsis = prevNum && pageNum - prevNum > 1;
                     return (
-                      <React.Fragment key={`page-${pageNum}`}>
+                      <React.Fragment key={`page-${pageNum}-${idx}`}>
                         {showEllipsis && <span className="px-0.5 text-[10px] text-[#636A78]">...</span>}
                         <button
                           onClick={() => setCurrentPage(pageNum)}
@@ -479,7 +479,7 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
 
       <AnimatePresence>
         {deleteConfirmId && (
-          <div className="fixed inset-0 z-[250] flex items-center justify-center p-4">
+          <div key="modal-trade-delete" className="fixed inset-0 z-[250] flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -526,7 +526,7 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
         )}
 
         {selectedTrade && (
-          <div className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+          <div key={`modal-trade-detail-${selectedTrade.id}`} className="fixed inset-0 z-[300] flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -738,7 +738,7 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
         )}
 
         {showReviewModal && (
-          <div className="fixed inset-0 z-[400] flex items-center justify-center p-4">
+          <div key="modal-trade-review" className="fixed inset-0 z-[400] flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -1019,7 +1019,7 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
 
         {/* Fullscreen Dedicated Image Lightbox (z-600 to float above all modals) */}
         {selectedImages && selectedImages.length > 0 && (
-          <div className="fixed inset-0 z-[600] flex flex-col items-center justify-center p-2 sm:p-4 select-none">
+          <div key="modal-trade-lightbox" className="fixed inset-0 z-[600] flex flex-col items-center justify-center p-2 sm:p-4 select-none">
             {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}

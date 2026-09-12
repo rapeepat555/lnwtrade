@@ -199,9 +199,9 @@ export function TradingViewChart({
                   <div className="px-4 py-1 mb-1">
                     <p className="text-[9px] font-black uppercase text-[#636A78] tracking-widest">Quick Select</p>
                   </div>
-                  {COMMON_SYMBOLS.map((s) => (
+                  {COMMON_SYMBOLS.map((s, sIdx) => (
                     <button
-                      key={s.symbol}
+                      key={`chart-sym-${s.symbol}-${sIdx}`}
                       onClick={() => {
                         setSymbol(s.symbol);
                         setIsSelectorOpen(false);

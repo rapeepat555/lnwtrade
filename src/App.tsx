@@ -285,7 +285,7 @@ export default function App() {
         const questsSnap = await getDocs(questsRef);
         
         if (!questsSnap.empty) {
-          let loadedQuests = questsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Quest));
+          let loadedQuests = questsSnap.docs.map(doc => ({ ...doc.data(), id: doc.id } as Quest));
           
           // Check for recurring resets (6:00 AM TH = 23:00 UTC previous day)
           const now = new Date();
@@ -749,7 +749,7 @@ export default function App() {
 
                 <AnimatePresence>
                   {isAccountMenuOpen && (
-                    <>
+                    <div key="account-menu-popover">
                       <div className="fixed inset-0 z-40" onClick={() => setIsAccountMenuOpen(false)} />
                       <motion.div 
                         initial={{ opacity: 0, y: 8, scale: 0.96 }}
@@ -815,7 +815,7 @@ export default function App() {
                           </button>
                         </div>
                       </motion.div>
-                    </>
+                    </div>
                   )}
                 </AnimatePresence>
               </div>
@@ -893,7 +893,7 @@ export default function App() {
 
       <AnimatePresence>
         {isMembersListOpen && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div key="modal-members-list" className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
             <motion.div 
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}

@@ -116,6 +116,7 @@ export function Auth() {
             <AnimatePresence mode="wait">
               {mode === 'signup' && (
                 <motion.div 
+                  key="auth-signup-field"
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
@@ -183,6 +184,7 @@ export function Auth() {
             <AnimatePresence>
               {error && (
                 <motion.p 
+                  key="auth-error-msg"
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   className="text-rose-500 text-[10px] font-bold uppercase tracking-wider px-1"
@@ -192,6 +194,7 @@ export function Auth() {
               )}
               {success && (
                 <motion.p 
+                  key="auth-success-msg"
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   className="text-[#10B981] text-[10px] font-bold uppercase tracking-wider px-1"

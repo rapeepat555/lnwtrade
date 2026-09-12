@@ -127,7 +127,7 @@ export function useTradingData(user: User | null, targetUserId?: string | null) 
               };
             });
           }
-          return { id: doc.id, ...data };
+          return { ...data, id: doc.id };
         }));
       } else if (!targetUserId && user) {
         // If Firestore is empty, check if we have local cached portfolios for this user
@@ -199,7 +199,7 @@ export function useTradingData(user: User | null, targetUserId?: string | null) 
         return;
       }
       
-      const rawTrades = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Trade));
+      const rawTrades = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id } as Trade));
       const processedTrades = rawTrades.map(t => {
         // If it looks closed but isn't fully processed, fix it in memory
         if (t.exitPrice != null && (t.pnl == null || t.status !== 'closed')) {

@@ -236,8 +236,9 @@ export function TradeForm({
   return (
     <AnimatePresence>
       {isOpen && (
-        <>
+        <div key="trade-form-modal-root">
           <motion.div
+            key="trade-form-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -245,6 +246,7 @@ export function TradeForm({
             className="fixed inset-0 bg-zinc-900/40 backdrop-blur-sm z-[100]"
           />
           <motion.div
+            key="trade-form-panel"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -329,8 +331,8 @@ export function TradeForm({
                               }
                             }}
                           >
-                            {portfolios.map(p => (
-                              <option key={`form-p-${p.id}`} value={p.id} className="bg-[#14161A]">
+                            {portfolios.map((p, pIdx) => (
+                              <option key={`form-p-${p.id || 'p'}-${pIdx}`} value={p.id} className="bg-[#14161A]">
                                 {p.name}{p.isArchived ? ' (จัดเก็บแล้ว)' : ''}
                               </option>
                             ))}
@@ -629,7 +631,7 @@ export function TradeForm({
           </motion.div>
           <AnimatePresence>
             {previewImage && (
-              <div className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+              <div key="trade-form-preview-modal" className="fixed inset-0 z-[300] flex items-center justify-center p-4">
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -658,7 +660,7 @@ export function TradeForm({
               </div>
             )}
           </AnimatePresence>
-        </>
+        </div>
       )}
     </AnimatePresence>
   );

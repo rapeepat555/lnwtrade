@@ -65,6 +65,7 @@ export function Tutorial() {
     <AnimatePresence>
       {isOpen && (
         <motion.div
+          key="tutorial-modal-overlay"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

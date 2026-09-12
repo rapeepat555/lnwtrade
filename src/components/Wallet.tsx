@@ -290,9 +290,9 @@ export function WalletView({
           </div>
         ) : (
           <div className="flex overflow-x-auto gap-2.5 pb-2 snap-x snap-mandatory no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
-            {displayedPortfolios.map(p => (
+            {displayedPortfolios.map((p, pIdx) => (
               <div 
-                key={`wallet-card-${p.id}`}
+                key={`wallet-card-${p.id || 'p'}-${pIdx}`}
                 onClick={() => {
                   setActivePortfolio(p.id);
                   setNewBalance(p.balance.toString());
@@ -521,7 +521,7 @@ export function WalletView({
                       stroke="none"
                     >
                       {allocationData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        <Cell key={`wallet-alloc-cell-${entry.name || index}-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
                     <Tooltip 
@@ -580,7 +580,7 @@ export function WalletView({
                   activePortfolio.transactions.map((tx, idx) => {
                     const isPos = tx.type === 'deposit' || tx.amount > 0;
                     return (
-                      <tr key={tx.id ? `tx-${tx.id}` : `tx-fallback-${idx}`} className="hover:bg-[#1F2228]/50 transition-colors">
+                      <tr key={`tx-${tx.id || 'tx'}-${idx}`} className="hover:bg-[#1F2228]/50 transition-colors">
                         <td className="px-4 py-2.5">
                           <div className="flex items-center gap-1.5">
                             <div className={cn(
@@ -627,7 +627,7 @@ export function WalletView({
       <AnimatePresence>
         {/* Transaction Delete Confirm */}
         {txDeleteConfirmId && (
-          <div className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+          <div key="modal-tx-delete" className="fixed inset-0 z-[300] flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -668,7 +668,7 @@ export function WalletView({
 
         {/* Archive Wallet Confirmation Modal */}
         {archiveConfirmId && (
-          <div className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+          <div key="modal-wallet-archive" className="fixed inset-0 z-[300] flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -716,7 +716,7 @@ export function WalletView({
 
         {/* Delete Wallet Confirm */}
         {deleteConfirmId && (
-          <div className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+          <div key="modal-wallet-delete" className="fixed inset-0 z-[300] flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -768,7 +768,7 @@ export function WalletView({
 
         {/* Add New / Edit Settings Modal */}
         {(isAddingNew || editingSettings) && (
-          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+          <div key="modal-wallet-form" className="fixed inset-0 z-[200] flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

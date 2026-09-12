@@ -140,9 +140,9 @@ export function Analyst({ setups }: AnalystProps) {
       const records = snapshot.docs.map(doc => {
         const data = doc.data() as BacktestRecord;
         return {
-          id: doc.id,
           ...data,
-          session: data.session === 'Asian' ? 'Asia' : data.session
+          session: data.session === 'Asian' ? 'Asia' : data.session,
+          id: doc.id
         } as BacktestRecord;
       });
       setBacktests(records);
@@ -513,10 +513,10 @@ export function Analyst({ setups }: AnalystProps) {
               <div>
                 <p className="text-[10px] font-bold text-[#636A78] uppercase tracking-wider mb-2">Sessions Performance</p>
                 <div className="space-y-2">
-                  {sessions.map(s => {
+                  {sessions.map((s, sIdx) => {
                     const data = sessionsBreakdown.find(bd => bd.name === s) || { name: s, total: 0, winRate: 0 };
                     return (
-                      <div key={s} className="flex items-center justify-between text-xs font-medium">
+                      <div key={`session-bd-${s}-${sIdx}`} className="flex items-center justify-between text-xs font-medium">
                         <span className="text-white flex items-center gap-1.5">
                           <span className={cn(
                             "w-1.5 h-1.5 rounded-full",
@@ -628,8 +628,8 @@ export function Analyst({ setups }: AnalystProps) {
                     value={symbol}
                     onChange={e => setSymbol(e.target.value)}
                   >
-                    {TRADING_SYMBOLS.map(ts => (
-                      <option key={ts.symbol} value={ts.symbol} className="bg-[#14161A]">
+                    {TRADING_SYMBOLS.map((ts, tsIdx) => (
+                      <option key={`symbol-opt-${ts.symbol}-${tsIdx}`} value={ts.symbol} className="bg-[#14161A]">
                         {ts.symbol} - {ts.name}
                       </option>
                     ))}
@@ -667,8 +667,8 @@ export function Analyst({ setups }: AnalystProps) {
                     value={setup}
                     onChange={e => setSetup(e.target.value)}
                   >
-                    {activeSetups.map(s => (
-                      <option key={s} value={s} className="bg-[#14161A]">{s}</option>
+                    {activeSetups.map((s, sIdx) => (
+                      <option key={`setup-opt-${s}-${sIdx}`} value={s} className="bg-[#14161A]">{s}</option>
                     ))}
                   </select>
                 )}
@@ -701,8 +701,8 @@ export function Analyst({ setups }: AnalystProps) {
                     value={session}
                     onChange={e => setSession(e.target.value)}
                   >
-                    {sessions.map(s => (
-                      <option key={s} value={s} className="bg-[#14161A]">{s}</option>
+                    {sessions.map((s, sIdx) => (
+                      <option key={`session-opt-${s}-${sIdx}`} value={s} className="bg-[#14161A]">{s}</option>
                     ))}
                   </select>
                 </div>
@@ -739,8 +739,8 @@ export function Analyst({ setups }: AnalystProps) {
                       value={zone}
                       onChange={e => setZone(e.target.value)}
                     >
-                      {zones.map(z => (
-                        <option key={z} value={z} className="bg-[#14161A]">{z}</option>
+                      {zones.map((z, zIdx) => (
+                        <option key={`zone-opt-${z}-${zIdx}`} value={z} className="bg-[#14161A]">{z}</option>
                       ))}
                     </select>
                   )}
@@ -918,7 +918,7 @@ export function Analyst({ setups }: AnalystProps) {
                   value={filterSetup}
                   onChange={e => setFilterSetup(e.target.value)}
                 >
-                  <option value="all">ระบบเทรดทั้งหมด</option>
+                  <option key="filter-setup-all" value="all">ระบบเทรดทั้งหมด</option>
                   {Array.from(new Set(backtests.map(b => b.setup).filter(Boolean))).map((setupName, sIdx) => (
                     <option key={`filter-setup-${setupName}-${sIdx}`} value={setupName}>{setupName}</option>
                   ))}
@@ -942,7 +942,7 @@ export function Analyst({ setups }: AnalystProps) {
                 >
                   All Sessions
                 </button>
-                {sessions.map(s => {
+                {sessions.map((s, sIdx) => {
                   const count = backtests.filter(b => b.session === s).length;
                   const activeClass = s === 'London' ? "bg-blue-500/10 border-blue-500/40 text-blue-400" :
                                       s === 'New York' ? "bg-yellow-500/10 border-yellow-500/40 text-yellow-400" :
@@ -950,7 +950,7 @@ export function Analyst({ setups }: AnalystProps) {
                                       "bg-teal-500/10 border-teal-500/40 text-teal-400";
                   return (
                     <button
-                      key={s}
+                      key={`filter-session-${s}-${sIdx}`}
                       onClick={() => setFilterSession(s)}
                       className={cn(
                         "px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase border transition-all",
@@ -1073,12 +1073,12 @@ export function Analyst({ setups }: AnalystProps) {
 
             <AnimatePresence mode="popLayout">
               {isLoading ? (
-                <div className="py-24 text-center">
+                <div key="bt-loading-state" className="py-24 text-center">
                   <div className="w-10 h-10 border-4 border-[#10B981]/15 border-t-[#10B981] rounded-full animate-spin mx-auto mb-4" />
                   <p className="text-xs text-[#636A78] font-bold animate-pulse">กำลังดึงข้อมูลการทดสอบย้อนหลัง...</p>
                 </div>
               ) : filteredBacktests.length > 0 ? (
-                <div className="space-y-3.5">
+                <div key="bt-list-state" className="space-y-3.5">
                   {paginatedBacktests.map((b, bIdx) => {
                     const formattedDate = format(new Date(b.dateTime), 'MMM dd, yyyy HH:mm');
                     return (
@@ -1206,7 +1206,7 @@ export function Analyst({ setups }: AnalystProps) {
                   })}
                 </div>
               ) : (
-                <div className="text-center py-24 bg-[#14161A]/30 rounded-[3rem] border border-dashed border-[#1F2228]/80">
+                <div key="bt-empty-state" className="text-center py-24 bg-[#14161A]/30 rounded-[3rem] border border-dashed border-[#1F2228]/80">
                   <div className="w-16 h-16 bg-[#1F2228] rounded-full flex items-center justify-center mb-4 mx-auto">
                     <BookOpen className="w-7 h-7 text-[#636A78]" />
                   </div>
@@ -1303,7 +1303,7 @@ export function Analyst({ setups }: AnalystProps) {
 
       <AnimatePresence>
         {deleteConfirmId && (
-          <div className="fixed inset-0 z-[250] flex items-center justify-center p-4">
+          <div key="modal-bt-delete" className="fixed inset-0 z-[250] flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -1350,7 +1350,7 @@ export function Analyst({ setups }: AnalystProps) {
         )}
 
         {showSaveConfirm && (
-          <div className="fixed inset-0 z-[250] flex items-center justify-center p-4">
+          <div key="modal-bt-save-confirm" className="fixed inset-0 z-[250] flex items-center justify-center p-4">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -1433,6 +1433,7 @@ export function Analyst({ setups }: AnalystProps) {
 
         {editingId && backtests.find(b => b.id === editingId) && (
           <EditBacktestModal
+            key={`modal-bt-edit-${editingId}`}
             record={backtests.find(b => b.id === editingId)!}
             onClose={() => setEditingId(null)}
             onSave={handleSaveEdit}
@@ -1613,8 +1614,8 @@ function EditBacktestModal({
                 value={symbol}
                 onChange={e => setSymbol(e.target.value)}
               >
-                {TRADING_SYMBOLS.map(ts => (
-                  <option key={ts.symbol} value={ts.symbol} className="bg-[#14161A]">
+                {TRADING_SYMBOLS.map((ts, tsIdx) => (
+                  <option key={`edit-symbol-opt-${ts.symbol}-${tsIdx}`} value={ts.symbol} className="bg-[#14161A]">
                     {ts.symbol} - {ts.name}
                   </option>
                 ))}
@@ -1652,8 +1653,8 @@ function EditBacktestModal({
                 value={setup}
                 onChange={e => setSetup(e.target.value)}
               >
-                {activeSetups.map(s => (
-                  <option key={s} value={s} className="bg-[#14161A]">{s}</option>
+                {activeSetups.map((s, sIdx) => (
+                  <option key={`edit-setup-opt-${s}-${sIdx}`} value={s} className="bg-[#14161A]">{s}</option>
                 ))}
               </select>
             )}
@@ -1686,8 +1687,8 @@ function EditBacktestModal({
                 value={session}
                 onChange={e => setSession(e.target.value)}
               >
-                {sessions.map(s => (
-                  <option key={s} value={s} className="bg-[#14161A]">{s}</option>
+                {sessions.map((s, sIdx) => (
+                  <option key={`edit-session-opt-${s}-${sIdx}`} value={s} className="bg-[#14161A]">{s}</option>
                 ))}
               </select>
             </div>
@@ -1724,8 +1725,8 @@ function EditBacktestModal({
                   value={zone}
                   onChange={e => setZone(e.target.value)}
                 >
-                  {zones.map(z => (
-                    <option key={z} value={z} className="bg-[#14161A]">{z}</option>
+                  {zones.map((z, zIdx) => (
+                    <option key={`edit-zone-opt-${z}-${zIdx}`} value={z} className="bg-[#14161A]">{z}</option>
                   ))}
                 </select>
               )}

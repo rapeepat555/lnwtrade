@@ -66,9 +66,9 @@ export function MembersList({ onSelectMember, onClose }: MembersListProps) {
           </div>
         ) : (
           <div className="space-y-1">
-            {filteredMembers.map((member) => (
+            {filteredMembers.map((member, mIdx) => (
               <button
-                key={member.id}
+                key={`member-${member.id || 'm'}-${mIdx}`}
                 onClick={() => onSelectMember(member.id, member.profile)}
                 className="w-full flex items-center gap-4 p-3 hover:bg-[#1F2228] rounded-xl transition-all group text-left"
               >

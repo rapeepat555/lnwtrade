@@ -109,7 +109,7 @@ export function Sidebar({ activeTab, setActiveTab, isCollapsed, setIsCollapsed }
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0A0B0E]/95 backdrop-blur-md border-t border-[#1F2228] flex items-center justify-around px-1 z-[100] pt-1 pb-[max(0.35rem,env(safe-area-inset-bottom))] overflow-x-auto no-scrollbar shadow-[0_-8px_20px_rgba(0,0,0,0.5)]">
         {navItems.map((item) => (
           <button
-            key={item.id}
+            key={`mobile-nav-${item.id}`}
             onClick={() => setActiveTab(item.id)}
             className={cn(
               "flex flex-col items-center justify-center min-w-[54px] py-1 px-1.5 rounded-lg transition-all duration-200",
