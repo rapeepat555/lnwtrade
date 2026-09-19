@@ -1560,14 +1560,14 @@ function EditBacktestModal({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      className="fixed inset-0 z-[200] flex items-center justify-center p-2.5 sm:p-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))] bg-black/70 backdrop-blur-sm"
       onClick={onClose}
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        className="relative w-full max-w-lg bg-[#14161A] border border-[#1F2228] rounded-[2.5rem] p-6 shadow-2xl max-h-[90vh] overflow-y-auto"
+        className="relative w-full max-w-lg bg-[#14161A] border border-[#1F2228] rounded-[2rem] sm:rounded-[2.5rem] p-5 sm:p-6 shadow-2xl max-h-[min(88dvh,750px)] overflow-y-auto my-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <button

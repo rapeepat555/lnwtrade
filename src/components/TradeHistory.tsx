@@ -526,7 +526,7 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
         )}
 
         {selectedTrade && (
-          <div key={`modal-trade-detail-${selectedTrade.id}`} className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+          <div key={`modal-trade-detail-${selectedTrade.id}`} className="fixed inset-0 z-[300] flex items-center justify-center p-2.5 sm:p-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))]">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -538,7 +538,7 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-2xl bg-[#0A0B0E] rounded-3xl border border-[#1F2228] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+              className="relative w-full max-w-2xl bg-[#0A0B0E] rounded-3xl border border-[#1F2228] shadow-2xl overflow-hidden flex flex-col max-h-[min(88dvh,850px)]"
             >
               {/* Header */}
               <div className="px-4 py-4 sm:px-8 sm:py-6 border-b border-[#1F2228] flex items-center justify-between bg-[#14161A]/50">
@@ -738,7 +738,7 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
         )}
 
         {showReviewModal && (
-          <div key="modal-trade-review" className="fixed inset-0 z-[400] flex items-center justify-center p-4">
+          <div key="modal-trade-review" className="fixed inset-0 z-[400] flex items-center justify-center p-2.5 sm:p-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))]">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -750,7 +750,7 @@ export function TradeHistory({ trades, portfolios, setups, onDelete, onClose, on
               initial={{ opacity: 0, scale: 0.95, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 30 }}
-              className="relative w-full max-w-4xl bg-[#0A0B0E] rounded-3xl border border-[#1F2228] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+              className="relative w-full max-w-4xl bg-[#0A0B0E] rounded-3xl border border-[#1F2228] shadow-2xl overflow-hidden flex flex-col max-h-[min(88dvh,850px)]"
             >
               {/* Header */}
               <div className="px-4 py-4 sm:px-6 sm:py-5 border-b border-[#1F2228] flex items-center justify-between bg-[#14161A]/50">

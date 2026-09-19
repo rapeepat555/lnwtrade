@@ -236,21 +236,24 @@ export function TradeForm({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div key="trade-form-modal-root">
+        <div 
+          key="trade-form-modal-root"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4 overflow-hidden pt-[max(0.5rem,env(safe-area-inset-top))] pb-[max(0.5rem,env(safe-area-inset-bottom))]"
+        >
           <motion.div
             key="trade-form-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-zinc-900/40 backdrop-blur-sm z-[100]"
+            className="absolute inset-0 bg-black/75 backdrop-blur-sm"
           />
           <motion.div
             key="trade-form-panel"
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            initial={{ opacity: 0, scale: 0.96, y: 15 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-1.25rem)] sm:w-full max-w-xl bg-[#14161A] rounded-2xl sm:rounded-3xl shadow-2xl z-[101] overflow-hidden border border-[#1F2228] h-[92vh] sm:h-[800px] max-h-[95vh] flex flex-col"
+            exit={{ opacity: 0, scale: 0.96, y: 15 }}
+            className="relative w-full max-w-xl bg-[#14161A] rounded-2xl sm:rounded-3xl shadow-2xl z-10 overflow-hidden border border-[#1F2228] h-[min(88dvh,780px)] max-h-[calc(100dvh-1.25rem)] sm:max-h-[min(90dvh,800px)] flex flex-col my-auto"
           >
             <div className="relative flex-1 flex flex-col min-h-0">
               <AnimatePresence mode="wait">
@@ -294,7 +297,7 @@ export function TradeForm({
                     exit={{ x: 10, opacity: 0 }}
                     className="absolute inset-0 flex flex-col overflow-hidden"
                   >
-                    <div className="p-5 sm:p-6 border-b border-[#1F2228] flex items-center justify-between bg-[#0A0B0E] shrink-0">
+                    <div className="px-4 py-3.5 sm:px-6 sm:py-5 border-b border-[#1F2228] flex items-center justify-between bg-[#0A0B0E] shrink-0">
                       <div>
                         <h3 className="text-lg sm:text-xl font-serif text-white tracking-tight">
                           {editingTrade ? 'Update Execution' : 'New Execution'}
@@ -631,7 +634,7 @@ export function TradeForm({
           </motion.div>
           <AnimatePresence>
             {previewImage && (
-              <div key="trade-form-preview-modal" className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+              <div key="trade-form-preview-modal" className="fixed inset-0 z-[300] flex items-center justify-center p-3 sm:p-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))]">
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -643,18 +646,18 @@ export function TradeForm({
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  className="relative max-w-5xl max-h-[90vh] w-full flex items-center justify-center"
+                  className="relative max-w-5xl max-h-[85dvh] w-full flex items-center justify-center"
                 >
                   <img 
                     src={previewImage} 
                     alt="Preview" 
-                    className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl" 
+                    className="max-w-full max-h-[85dvh] object-contain rounded-lg shadow-2xl" 
                   />
                   <button
                     onClick={() => setPreviewImage(null)}
-                    className="absolute -top-12 right-0 p-2 text-white/50 hover:text-white transition-colors"
+                    className="absolute -top-10 sm:-top-12 right-0 p-2 text-white/70 hover:text-white transition-colors"
                   >
-                    <X className="w-8 h-8" />
+                    <X className="w-6 h-6 sm:w-8 sm:h-8" />
                   </button>
                 </motion.div>
               </div>
